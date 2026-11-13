@@ -1,11 +1,18 @@
 /* 應用層：頁面切換、計算流程、穴庫渲染、歷史記錄 */
 
+/* 由目前鐘點推對應時辰（子時 23:00 起） */
+function currentShichen() {
+  const h = new Date().getHours();
+  const idx = h === 23 ? 0 : Math.floor((h + 1) / 2);
+  return SHICHEN[idx];
+}
+
 const state = {
   mode: 'motherchild',
   meridian: '足少陰腎經',
   def: '實證',
   date: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
-  shichen: SHICHEN[0],
+  shichen: currentShichen(),
   lastResult: null
 };
 
@@ -55,6 +62,7 @@ function buildRuleRail() {
     b.onclick = () => {
       state.mode = r.id;
       ruleRail.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.rule === r.id));
+      liveRecalc();
     };
     ruleRail.appendChild(b);
   });
@@ -66,6 +74,7 @@ $('defGroup').querySelectorAll('.chip').forEach(c => {
   c.onclick = () => {
     state.def = c.dataset.def;
     $('defGroup').querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === c));
+    liveRecalc();
   };
 });
 
@@ -82,6 +91,11 @@ function buildMeridianOptions() {
 }
 buildMeridianOptions();
 meridianSelect.value = state.meridian;
+meridianSelect.onchange = () => {
+  state.meridian = meridianSelect.value;
+  $('meridianLabel').textContent = I18N.t(state.meridian);
+  liveRecalc();
+};
 
 const shichenSelect = $('shichenSelect');
 function buildShichenOptions() {
@@ -95,6 +109,11 @@ function buildShichenOptions() {
 }
 buildShichenOptions();
 shichenSelect.value = state.shichen;
+shichenSelect.onchange = () => {
+  state.shichen = shichenSelect.value;
+  refreshDial();
+  liveRecalc();
+};
 $('dateInput').value = state.date;
 
 /* ── 圓盤刻度 ── */
@@ -229,6 +248,9 @@ async function calculate(input, { save = true } = {}) {
   return res;
 }
 
+/* 條件變更即時重算（不寫入歷史） */
+function liveRecalc() { calculate(currentInput(), { save: false }); }
+
 $('calcBtn').onclick = async () => {
   await calculate(currentInput());
   toast(I18N.t('已計算，記錄已保存'));
@@ -326,7 +348,7 @@ $('modalOk').onclick = () => {
   $('meridianLabel').textContent = I18N.t(state.meridian);
   refreshDial();
   openModal(false);
-  toast(I18N.t('計算條件已更新'));
+  liveRecalc();
 };
 
 function syncControls() {
@@ -401,4 +423,5 @@ localeBtn.onclick = () => {
   syncControls();
   await renderHistory();
   refreshDial();
+  liveRecalc();
 })();
