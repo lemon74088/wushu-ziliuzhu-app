@@ -3,6 +3,7 @@
 function runEngine(input) {
   const rule = RULES.find(r => r.id === input.mode) || RULES[0];
   if (!rule.available) return pendingResult(rule, input);
+  if (rule.id === 'nazu') return nazu(rule, input);
   return motherChild(rule, input);
 }
 
@@ -66,6 +67,39 @@ function motherChild(rule, input) {
       { label: '規則已對教材', kind: 'ok' }
     ],
     warnings: ['本結果為五輸穴母穴／子穴推導，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
+  };
+}
+
+/* ENG-07 納子法：按時辰推當令經脈，列出該經五輸穴 */
+function nazu(rule, input) {
+  const branch = (input.shichen || '')[0];
+  const m = MERIDIANS.find(x => x.id === NAZU_FLOW[branch]);
+  if (!m) {
+    return { status: 'error', point: '時辰找不到', mer: '', sub: '時辰資料比對失敗。', steps: [], meta: [], warnings: [] };
+  }
+  const order = PT_EL[m.polar];
+  const pts = m.pts.map((p, i) => `${p[0]} ${p[1]}（${EL[order[i]].name}）`);
+
+  const steps = [
+    `納子流注：${branch}時氣血流注${m.name}。`,
+    `該經五輸穴：${pts.join('、')}。`,
+    '虛實補瀉另依母子補瀉法判斷；本結果為經脈當令參考。'
+  ];
+
+  return {
+    status: 'ok',
+    point: m.name,
+    mer: `${m.name} · 當令`,
+    sub: `此時（${input.shichen}）氣血流注${m.name}；取穴仍需配合虛實與典籍覆核。`,
+    element: m.element,
+    steps,
+    meta: [
+      { label: `引擎 ${rule.engine}`, kind: '' },
+      { label: `規則版本 ${rule.version}`, kind: '' },
+      { label: `資料 ${DATA_VERSION}`, kind: '' },
+      { label: '規則已對教材', kind: 'ok' }
+    ],
+    warnings: ['納子法為經脈當令參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
   };
 }
 

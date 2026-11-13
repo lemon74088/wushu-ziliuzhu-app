@@ -64,11 +64,18 @@ const MERIDIANS = [
     desc: '膀胱經起目內眥，挾脊抵腰，循腿後外側至足小趾；合穴委中在膕橫紋。' }
 ];
 
+/* 納子流注次序：子膽丑肝寅肺卯大腸辰胃巳脾午心未小腸申膀胱酉腎戌心包亥三焦 */
+const NAZU_FLOW = {
+  '子': 'gallbladder', '丑': 'liver',   '寅': 'lung',          '卯': 'largeintestine',
+  '辰': 'stomach',     '巳': 'spleen',   '午': 'heart',         '未': 'smallintestine',
+  '申': 'bladder',     '酉': 'kidney',   '戌': 'pericardium',   '亥': 'sanjiao'
+};
+
 /* 計算法清單：available 為 true 表示 v1 已實作其餘先標待研究，不產生假結果 */
 const RULES = [
   { id: 'motherchild', name: '母子補瀉', engine: 'ENG-05', available: true,  version: 'MC-v0.2' },
   { id: 'najia',       name: '納甲法',   engine: 'ENG-06', available: false, version: 'NAJIA-v0.0' },
-  { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: false, version: 'NAZU-v0.0' },
+  { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1' },
   { id: 'wumen',       name: '五門十變', engine: 'ENG-08', available: false, version: 'WUMEN-v0.0' },
   { id: 'huhe',        name: '互合法',   engine: 'ENG-09', available: false, version: 'MUTUAL-v0.0' },
   { id: 'huahua',      name: '化合法',   engine: 'ENG-10', available: false, version: 'TRANS-v0.0' },

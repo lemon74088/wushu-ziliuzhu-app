@@ -8,7 +8,7 @@ function currentShichen() {
 }
 
 const state = {
-  mode: 'motherchild',
+  mode: 'nazu',
   meridian: '足少陰腎經',
   def: '實證',
   date: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
@@ -249,7 +249,10 @@ async function calculate(input, { save = true } = {}) {
 }
 
 /* 條件變更即時重算（不寫入歷史） */
-function liveRecalc() { calculate(currentInput(), { save: false }); }
+function liveRecalc() {
+  $('fieldCard').hidden = state.mode !== 'motherchild';
+  calculate(currentInput(), { save: false });
+}
 
 $('calcBtn').onclick = async () => {
   await calculate(currentInput());
