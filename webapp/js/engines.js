@@ -6,7 +6,15 @@ function runEngine(input) {
   return motherChild(rule, input);
 }
 
-/* ENG-05 母子補瀉：虛補母、實瀉子，按五行相生推對應經脈 */
+/* 取本經五行相符的五輸穴：母穴／子穴 */
+function pointByElement(m, el) {
+  const order = PT_EL[m.polar];
+  const i = order.indexOf(el);
+  if (i < 0) return null;
+  return { category: m.pts[i][0], name: m.pts[i][1], element: el };
+}
+
+/* ENG-05 母子補瀉：虛補母穴、實瀉子穴，按本經五輸五行取穴，另列母經／子經參考 */
 function motherChild(rule, input) {
   const m = meridianByName(input.meridian);
   if (!m) {
@@ -15,29 +23,34 @@ function motherChild(rule, input) {
   const el = m.element;
   const motherEl = SHENG_MOTHER[el];
   const childEl = SHENG[el];
+  const motherPt = pointByElement(m, motherEl);
+  const childPt = pointByElement(m, childEl);
   const motherMers = meridiansByElement(motherEl).map(x => x.name);
   const childMers = meridiansByElement(childEl).map(x => x.name);
 
-  let direction, targetMers, targetEl;
+  let direction, picks, targetMers, targetEl;
   if (input.def === '虛證') {
-    direction = '補母'; targetMers = motherMers; targetEl = motherEl;
+    direction = '補母'; picks = [motherPt]; targetMers = motherMers; targetEl = motherEl;
   } else if (input.def === '實證') {
-    direction = '瀉子'; targetMers = childMers; targetEl = childEl;
+    direction = '瀉子'; picks = [childPt]; targetMers = childMers; targetEl = childEl;
   } else {
-    direction = '母子並列'; targetMers = motherMers.concat(childMers); targetEl = null;
+    direction = '母子並列'; picks = [motherPt, childPt]; targetMers = motherMers.concat(childMers); targetEl = null;
   }
 
+  const fmt = p => p ? `${p.name}（${p.category}·${EL[p.element].name}）` : '—';
+  const pointText = picks.filter(Boolean).map(fmt).join('、');
+
   const steps = [
-    `病經為「${m.name}」，五行屬${EL[el].name}。`,
+    `病經「${m.name}」，五行屬${EL[el].name}。`,
     `五行相生：${EL[motherEl].name}生${EL[el].name}，${EL[el].name}生${EL[childEl].name}。`,
     input.def === '未指定'
-      ? '虛實未指定，母經與子經一併列出，待確認虛實後再定補瀉。'
+      ? '虛實未指定，母穴與子穴一併列出，待確認虛實後再定補瀉。'
       : `依「虛則補其母、實則瀉其子」，本案${input.def}，宜${direction}。`,
-    `對應經脈：${targetMers.join('、')}。`
+    `本經母穴：${fmt(motherPt)}；本經子穴：${fmt(childPt)}。`,
+    `參考母經／子經：${targetMers.join('、')}。`
   ];
 
-  const pointText = input.def === '未指定' ? '母經 / 子經' : targetMers.join('、');
-  const sub = `依${input.def}與病經「${m.name}」推得補瀉方向；具體開穴仍需對照典籍與醫師覆核。`;
+  const sub = `依${input.def}與病經「${m.name}」推得${direction}取穴；具體操作仍需對照典籍與醫師覆核。`;
 
   return {
     status: 'ok',
@@ -52,7 +65,7 @@ function motherChild(rule, input) {
       { label: `資料 ${DATA_VERSION}`, kind: '' },
       { label: '規則已對教材', kind: 'ok' }
     ],
-    warnings: ['本結果為經脈層面補瀉方向，不直接等同選穴處方。']
+    warnings: ['本結果為五輸穴母穴／子穴推導，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
   };
 }
 
