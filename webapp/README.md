@@ -4,6 +4,7 @@
 
 ## 執行方式
 
+- 線上預覽（GitHub Pages）：https://lemon74088.github.io/wushu-ziliuzhu-app/webapp/index.html
 - 直接雙開 `index.html`（file:// 可運行，無建置步驟）。
 - 或本機起服務：`python -m http.server 8931`，再開 `http://127.0.0.1:8931/index.html`。
 
