@@ -1,0 +1,35 @@
+{
+  "query": "五腧穴子午流注計算工具 App，深色磨砂玻璃，圓盤圓環，繁體中文，中醫工具",
+  "signature": {
+    "ground": null,
+    "typeVoice": "sans-cool",
+    "imageWorld": null,
+    "layoutLogic": null,
+    "colorStrategy": "tri-role",
+    "motionVoice": "slow-push"
+  },
+  "why": {
+    "ground": "query 没给这一维的信号 —— 由你按内容定",
+    "typeVoice": "语义命中 1 个线索",
+    "imageWorld": "query 没给这一维的信号 —— 由你按内容定",
+    "layoutLogic": "query 没给这一维的信号 —— 由你按内容定",
+    "colorStrategy": "语义命中 1 个线索",
+    "motionVoice": "你指定的"
+  },
+  "open": [
+    "ground",
+    "imageWorld",
+    "layoutLogic"
+  ],
+  "divergence": {
+    "vsRecent": [
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "min": 0,
+    "require": 3
+  }
+}

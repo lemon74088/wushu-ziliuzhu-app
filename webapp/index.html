@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="theme-color" content="#0B120F">
+<title>五腧穴·子午流注計算</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="stage"><div id="app">
+  <div class="notch"></div>
+
+  <div class="statusbar">
+    <span id="statusTime">21:15</span>
+    <span class="sb-r"><i class="sig"></i><i class="wifi"></i><i class="bat"></i></span>
+  </div>
+
+  <div class="topbar" id="topbar">
+    <div class="brand">
+      <h1>五腧穴·子午流注</h1>
+      <p data-i18n="本機計算 · 規則可追溯 · 記錄可復算">本機計算 · 規則可追溯 · 記錄可復算</p>
+    </div>
+    <button class="icon-btn locale-btn" id="localeBtn" aria-label="切換繁簡">簡</button>
+    <button class="icon-btn" aria-label="版本資訊" id="settingsBtn">
+      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Z"/></svg>
+    </button>
+  </div>
+
+  <div id="flow">
+
+    <!-- ═══ 計算 ═══ -->
+    <section class="panel" data-panel="home">
+      <article class="card hero" id="dateCard" data-open-modal>
+        <div class="dial" id="dial">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="10"/>
+            <circle id="dialArc" cx="100" cy="100" r="86" fill="none" stroke="#D6543C" stroke-width="10"
+              stroke-linecap="round" stroke-dasharray="120 420" transform="rotate(-90 100 100)"/>
+            <g id="dialTicks"></g>
+          </svg>
+          <div class="dial-core">
+            <span class="shichen" id="dialShichen">子時</span>
+            <span class="pillar" id="dialPillar">時柱 · 待排</span>
+            <span class="day" id="dialDay">本地日期</span>
+          </div>
+        </div>
+        <div class="date-meta">
+          <span class="chip" id="metaDate">公曆 —</span>
+          <span class="chip" id="metaLunar">農曆 —</span>
+          <span class="chip" id="metaJieqi">節氣 —</span>
+          <span class="chip" id="metaShengxiao">生肖 —</span>
+          <span class="chip" id="metaShichen">時辰 —</span>
+        </div>
+      </article>
+
+      <div class="sec-label" data-i18n="選擇計算法">選擇計算法</div>
+      <div class="rail" id="ruleRail"></div>
+
+      <article class="card field" style="margin-top:14px">
+        <div class="field-row">
+          <span class="k" data-i18n="病經">病經</span>
+          <div class="v"><button class="select-btn" id="meridianBtn">
+            <span id="meridianLabel">足少陰腎經</span>
+            <svg class="ic sm caret" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
+          </button></div>
+        </div>
+        <div class="field-row">
+          <span class="k" data-i18n="虛實">虛實</span>
+          <div class="v def-group" id="defGroup">
+            <button class="chip" data-def="虛證" data-i18n="虛證">虛證</button>
+            <button class="chip on" data-def="實證" data-i18n="實證">實證</button>
+            <button class="chip" data-def="未指定" data-i18n="未指定">未指定</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card result" id="resultCard" hidden>
+        <div class="r-head">
+          <span class="r-tag" id="resultTag" data-i18n="計算結果">計算結果</span>
+          <div class="r-main">
+            <span class="r-point" id="resultPoint">—</span>
+            <span class="el-tag" id="resultElTag" hidden><span class="dot" id="resultElDot"></span><span id="resultEl">木</span></span>
+          </div>
+          <div class="r-mer" id="resultMer"></div>
+          <p class="r-sub" id="resultSub"></p>
+        </div>
+        <button class="r-toggle" data-expand data-i18n="展開推演依據">
+          展開推演依據
+          <svg class="ic sm caret" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
+        </button>
+        <div class="more"><div class="more-inner">
+          <div id="stepList"></div>
+          <div class="r-meta" id="resultMeta"></div>
+        </div></div>
+      </article>
+
+      <div class="cta">
+        <button class="go" id="calcBtn" data-i18n="開始計算">開始計算
+          <svg class="ic sm" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ═══ 穴庫 ═══ -->
+    <section class="panel" data-panel="points" hidden>
+      <div class="sec-label" data-i18n="十二經 · 五腧穴">十二經 · 五腧穴</div>
+      <div id="merList"></div>
+    </section>
+
+    <!-- ═══ 歷史 ═══ -->
+    <section class="panel" data-panel="history" hidden>
+      <div class="hist-head">
+        <span class="cnt" id="histCount">0 則記錄</span>
+        <button class="ghost-btn" id="exportBtn">
+          <svg class="ic sm" viewBox="0 0 256 256" fill="currentColor"><path d="M216,112v96a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V112A16,16,0,0,1,56,96H80a8,8,0,0,1,0,16H56v96H200V112H176a8,8,0,0,1,0-16h24A16,16,0,0,1,216,112ZM93.66,69.66,120,43.31V136a8,8,0,0,0,16,0V43.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,69.66Z"/></svg>
+          <span data-i18n="導出 JSON">導出 JSON</span>
+        </button>
+      </div>
+      <div id="histList"></div>
+    </section>
+  </div>
+
+  <nav class="tabbar">
+    <button class="on" data-go="home">
+      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M240,128a8,8,0,0,1-8,8H204.94l-37.78,75.58A8,8,0,0,1,160,216h-.4a8,8,0,0,1-7.08-5.14L95.35,60.76,63.28,131.31A8,8,0,0,1,56,136H24a8,8,0,0,1,0-16H50.85L88.72,36.69a8,8,0,0,1,14.76.46l57.51,151,31.85-63.71A8,8,0,0,1,200,120h32A8,8,0,0,1,240,128Z"/></svg>
+      <span data-i18n="計算">計算</span>
+    </button>
+    <button data-go="points">
+      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M200,40H56A16,16,0,0,0,40,56V200a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,80H136V56h64ZM120,56v64H56V56ZM56,136h64v64H56Zm144,64H136V136h64v64Z"/></svg>
+      <span data-i18n="穴庫">穴庫</span>
+    </button>
+    <button data-go="history">
+      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm-8-48A95.44,95.44,0,0,0,60.08,60.15C52.81,67.51,46.35,74.59,40,82V64a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H72a8,8,0,0,0,0-16H49c7.15-8.42,14.27-16.35,22.39-24.57a80,80,0,1,1,1.66,114.75,8,8,0,1,0-11,11.64A96,96,0,1,0,128,32Z"/></svg>
+      <span data-i18n="歷史">歷史</span>
+    </button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="scrim" id="scrim"></div>
+  <div class="modal" id="modal">
+    <div class="grab"></div>
+    <h3 data-i18n="輸入計算條件">輸入計算條件</h3>
+    <div class="field-row">
+      <span class="k" data-i18n="公曆">公曆</span>
+      <div class="v"><input type="date" id="dateInput"></div>
+    </div>
+    <div class="field-row">
+      <span class="k" data-i18n="時辰">時辰</span>
+      <div class="v">
+        <select id="shichenSelect"></select>
+      </div>
+    </div>
+    <div class="field-row">
+      <span class="k" data-i18n="病經">病經</span>
+      <div class="v"><select id="meridianSelect"></select></div>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" id="modalCancel" data-i18n="取消">取消</button>
+      <button class="go" id="modalOk" data-i18n="確定">確定</button>
+    </div>
+  </div>
+</div></div>
+
+<script src="vendor/lunar/lunar.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/engines.js"></script>
+<script src="js/history.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

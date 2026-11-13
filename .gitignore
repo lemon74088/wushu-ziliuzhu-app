@@ -1,0 +1,14 @@
+# 第三方研究副本（僅本地對照，許可證限制不得入產品倉庫）
+references/zips/
+references/src/
+
+# 設計草稿與參考圖素材
+ui-design-runs/
+UI預設圖片/
+
+# 本機暫存
+.sessions/
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
