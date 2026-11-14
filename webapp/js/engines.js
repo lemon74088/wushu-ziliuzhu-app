@@ -191,7 +191,8 @@ function huhe(rule, input) {
 
   const steps = [
     `病經「${m.name}」，與${otherM.name}相合（${pair.pair}）。`,
-    `互合法不取本經穴，逕取所合之經本穴：${benOther.name}（${benOther.category}·${EL[benOther.element].name}）。`,
+    `互合法不取本經穴，逕取所合之經本穴：${benOther.name}（${benOther.category}·${EL[benOther.element].name}）；病在甲取諸己，取的是相合之氣。`,
+    '互合一病一穴、借氣調經，多用於四肢痹痛、經氣不通、麻木、屈伸不利等經絡局部病證；化合偏內科整體補虛瀉實，可先化合固本、後互合通絡。',
     '井穴位於指趾端、皮薄易痛，臨床可依「瀉井當瀉滎、補井當補合」代用；須由醫師依證選穴。'
   ];
 
@@ -199,7 +200,7 @@ function huhe(rule, input) {
     status: 'ok',
     point: benOther.name,
     mer: `${otherM.name} · 互合借氣`,
-    sub: `病經${m.name}，依互合法取所合之經${otherM.name}本穴${benOther.name}；一病一穴，借彼經之氣調此經之病。`,
+    sub: `病經${m.name}，依互合法取所合之經${otherM.name}本穴${benOther.name}；一病一穴，借彼經之氣調此經之病，不取二穴合力。`,
     element: otherM.element,
     merId: otherM.id,
     info: [

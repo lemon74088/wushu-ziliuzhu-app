@@ -85,7 +85,7 @@ const RULES = [
   { id: 'motherchild', name: '母子補瀉', engine: 'ENG-05', available: true,  version: 'MC-v0.2',
     desc: '虛補母穴、實瀉子穴，按本經五輸五行取穴' },
   { id: 'najia',       name: '納甲法',   engine: 'ENG-06', available: false, version: 'NAJIA-v0.0',
-    desc: '以天干地支配合經脈開閉穴' },
+    desc: '按日干時干開穴；閉穴時以合日互用補救（待開穴表與原穴資料）' },
   { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1',
     desc: '依時辰推當令經脈與五輸穴' },
   { id: 'wumen',       name: '五門十變', engine: 'ENG-08', available: true,  version: 'WUMEN-v0.1',
