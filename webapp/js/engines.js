@@ -5,8 +5,8 @@ function runEngine(input) {
   if (!rule.available) return pendingResult(rule, input);
   if (rule.id === 'nazu') return nazu(rule, input);
   if (rule.id === 'wumen') return wumen(rule, input);
-  if (rule.id === 'huhe') return huhe(rule, input);
-  if (rule.id === 'huahua') return huahua(rule, input);
+  if (input.mode === 'huhe') return huhe(rule, input);
+  if (input.mode === 'huahua') return huahua(rule, input);
   return motherChild(rule, input);
 }
 
