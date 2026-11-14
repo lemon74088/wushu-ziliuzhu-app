@@ -88,8 +88,12 @@ const RULES = [
     desc: '按日干時干開穴；閉穴時以合日互用補救（待開穴表與原穴資料）' },
   { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1',
     desc: '依時辰推當令經脈與五輸穴' },
-  { id: 'wumen',       name: '五門十變', engine: 'ENG-08/09/10', available: true, version: 'WMT-v0.1',
-    desc: '化合並取兩經本穴、互合借氣調經，同一病經並列對照卡' },
+  { id: 'wumen',       name: '五門十變', engine: 'ENG-08', available: true,  version: 'WUMEN-v0.1',
+    desc: '十干合化、夫妻經與所化之氣查詢' },
+  { id: 'huhe',        name: '互合法',   engine: 'ENG-09', available: true,  version: 'MUTUAL-v0.1',
+    desc: '病經取所合之經本穴，借氣調經' },
+  { id: 'huahua',      name: '化合法',   engine: 'ENG-10', available: true,  version: 'TRANS-v0.1',
+    desc: '兩經本穴並取，合化第三種五行之氣' },
   { id: 'merge',       name: '綜合計算', engine: 'ENG-11', available: false, version: 'MERGE-v0.0',
     desc: '多方法對照與結果比較' }
 ];
