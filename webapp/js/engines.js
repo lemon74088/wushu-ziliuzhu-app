@@ -4,6 +4,7 @@ function runEngine(input) {
   const rule = RULES.find(r => r.id === input.mode) || RULES[0];
   if (!rule.available) return pendingResult(rule, input);
   if (rule.id === 'nazu') return nazu(rule, input);
+  if (rule.id === 'najia') return najia(rule, input);
   if (rule.id === 'wumen') return wumen(rule, input);
   if (input.mode === 'huhe') return huhe(rule, input);
   if (input.mode === 'huahua') return huahua(rule, input);
@@ -14,6 +15,10 @@ function pairOf(merId) {
   return WUMEN_PAIRS.find(p => p.a === merId || p.b === merId) || null;
 }
 function benOf(m) { return pointByElement(m, m.element); }
+function yuanPt(m) {
+  const name = YUAN_POINTS[m.id];
+  return name ? { category: '原穴', name, element: m.element } : null;
+}
 /* 化合補瀉目標：十干納經，心包寄癸、三焦寄壬不列入 */
 function tenByElement(el) {
   return MERIDIANS.filter(m => m.element === el && m.id !== 'pericardium' && m.id !== 'sanjiao');
@@ -99,7 +104,7 @@ function motherChild(rule, input) {
       { label: '補法母穴', pt: motherPt },
       { label: '瀉法子穴', pt: childPt },
       { label: '本穴', pt: benPt },
-      { label: '原穴', pt: null }
+      { label: '原穴', pt: yuanPt(m) }
     ],
     shu: shuList(m),
     steps,
@@ -139,7 +144,7 @@ function nazu(rule, input) {
     merId: m.id,
     info: [
       { label: '本穴', pt: benPt },
-      { label: '原穴', pt: null }
+      { label: '原穴', pt: yuanPt(m) }
     ],
     shu: shuList(m),
     steps,
@@ -150,6 +155,78 @@ function nazu(rule, input) {
       { label: '規則已對教材', kind: 'ok' }
     ],
     warnings: ['納子法為經脈當令參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
+  };
+}
+
+/* ENG-06 納甲法：日干納經，按時辰查表開井滎俞經合；俞穴兼過原穴，重見納三焦心包 */
+function najia(rule, input) {
+  const cal = input.calendar || {};
+  const gan = (cal.dayGZ || '')[0];
+  const branch = (input.shichen || '')[0];
+  const merId = NAJIA_GAN[gan];
+  const m = merId ? MERIDIANS.find(x => x.id === merId) : null;
+  const rows = NAJIA_TABLE[gan];
+
+  if (!m || !rows) {
+    return { status: 'error', point: '干支資料比對失敗', mer: '', sub: '日干或時辰資料比對失敗，無法排納甲開穴。', steps: [], meta: [], warnings: [] };
+  }
+
+  const meta = [
+    { label: `引擎 ${rule.engine}`, kind: '' },
+    { label: `規則版本 ${rule.version}`, kind: '' },
+    { label: `資料 ${DATA_VERSION}`, kind: '' },
+    { label: '規則已對教材', kind: 'ok' }
+  ];
+  const infoBase = [{ label: '值日經', pt: null, value: m.name }];
+
+  const entry = rows.find(r => r.branch === branch);
+
+  if (!entry) {
+    return {
+      status: 'closed',
+      point: '閉時 · 無值時開穴',
+      mer: `${m.name} · 閉時`,
+      sub: `${gan}日值日${m.name}；${branch}時非本法開穴時辰（陽日陽時、陰日陰時），屬閉時。`,
+      element: m.element,
+      merId: m.id,
+      info: infoBase,
+      shu: shuList(m),
+      steps: [
+        `${gan}日納經：值日${m.name}。`,
+        `${branch}時不在本日開穴時辰序列，是為閉時。`,
+        '閉時補法：合日互用（借相合日干同時辰之穴）、夫妻子母互用、十二經母子補瀉；須由醫師辨證選用。'
+      ],
+      meta,
+      warnings: ['閉時不強開穴；補法屬變通，仍須辨證與典籍覆核。']
+    };
+  }
+
+  const yuanText = [entry.yuan, entry.yuan2].filter(Boolean).join('、');
+  const info = infoBase.concat([
+    { label: `${entry.cat}穴`, pt: null, value: entry.point },
+    ...(yuanText ? [{ label: '兼過原穴', pt: null, value: yuanText }] : [])
+  ]);
+  if (entry.note) info.push({ label: '重見納穴', pt: null, value: entry.note });
+
+  const steps = [
+    `${gan}日納經，值日${m.name}。`,
+    `${branch}時開${entry.cat}穴：${entry.point}${entry.note ? `（${entry.note}）` : ''}。`,
+    entry.yuan ? `俞穴返本還元，兼過原穴${yuanText}。` : '井滎經合依五輸次序流注。',
+    '開穴本身不帶補瀉；虛實補瀉在手法，並配合辨證配穴。'
+  ];
+
+  return {
+    status: 'ok',
+    point: entry.point,
+    mer: `${m.name} · ${entry.cat}穴`,
+    sub: `${gan}日${branch}時，${m.name}值日，開${entry.cat}穴${entry.point}${yuanText ? `；兼過原穴${yuanText}` : ''}。`,
+    element: m.element,
+    merId: m.id,
+    info,
+    shu: shuList(m),
+    steps,
+    meta,
+    warnings: ['納甲開穴為時間流注參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
   };
 }
 

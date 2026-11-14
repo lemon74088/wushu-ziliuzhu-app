@@ -80,12 +80,110 @@ const WUMEN_PAIRS = [
   { pair: '戊癸', a: 'stomach',        b: 'kidney',          element: 'fire' }
 ];
 
+/* 納甲法：日干納經（甲膽乙肝丙小腸丁心戊胃己脾庚大腸辛肺壬膀胱癸腎；三焦寄壬、心包寄癸） */
+const NAJIA_GAN = {
+  '甲': 'gallbladder', '乙': 'liver',          '丙': 'smallintestine', '丁': 'heart',
+  '戊': 'stomach',      '己': 'spleen',         '庚': 'largeintestine',  '辛': 'lung',
+  '壬': 'bladder',      '癸': 'kidney'
+};
+
+/* 十二經原穴（納甲「返本還元」兼過；三焦陽池、心包大陵） */
+const YUAN_POINTS = {
+  lung: '太淵', pericardium: '大陵', heart: '神門', spleen: '太白', liver: '太衝', kidney: '太谿',
+  largeintestine: '合谷', sanjiao: '陽池', smallintestine: '腕骨', stomach: '衝陽',
+  gallbladder: '丘墟', bladder: '京骨'
+};
+
+/* 納甲十日開穴表（徐氏定穴歌）：branch 時辰；cat 井/滎/俞/經/合/重見；yuan 俞穴兼過原穴；yuan2 兼過三焦/心包原穴 */
+const NAJIA_TABLE = {
+  '甲': [
+    { branch: '戌', cat: '井', point: '足竅陰' },
+    { branch: '子', cat: '滎', point: '前谷' },
+    { branch: '寅', cat: '俞', point: '陷谷', yuan: '丘墟' },
+    { branch: '辰', cat: '經', point: '陽谿' },
+    { branch: '午', cat: '合', point: '委中' },
+    { branch: '申', cat: '重見', point: '液門', note: '三焦滎水' }
+  ],
+  '乙': [
+    { branch: '酉', cat: '井', point: '大敦' },
+    { branch: '亥', cat: '滎', point: '少府' },
+    { branch: '丑', cat: '俞', point: '太白', yuan: '太衝' },
+    { branch: '卯', cat: '經', point: '經渠' },
+    { branch: '巳', cat: '合', point: '陰谷' },
+    { branch: '未', cat: '重見', point: '勞宮', note: '包絡滎火' }
+  ],
+  '丙': [
+    { branch: '申', cat: '井', point: '少澤' },
+    { branch: '戌', cat: '滎', point: '內庭' },
+    { branch: '子', cat: '俞', point: '三間', yuan: '腕骨' },
+    { branch: '寅', cat: '經', point: '崑崙' },
+    { branch: '辰', cat: '合', point: '陽陵泉' },
+    { branch: '午', cat: '重見', point: '中渚', note: '三焦俞木' }
+  ],
+  '丁': [
+    { branch: '未', cat: '井', point: '少衝' },
+    { branch: '酉', cat: '滎', point: '大都' },
+    { branch: '亥', cat: '俞', point: '太淵', yuan: '神門' },
+    { branch: '丑', cat: '經', point: '復溜' },
+    { branch: '卯', cat: '合', point: '曲泉' },
+    { branch: '巳', cat: '重見', point: '大陵', note: '包絡俞土' }
+  ],
+  '戊': [
+    { branch: '午', cat: '井', point: '厲兌' },
+    { branch: '申', cat: '滎', point: '二間' },
+    { branch: '戌', cat: '俞', point: '束骨', yuan: '衝陽' },
+    { branch: '子', cat: '經', point: '陽輔' },
+    { branch: '寅', cat: '合', point: '小海' },
+    { branch: '辰', cat: '重見', point: '支溝', note: '三焦經火' }
+  ],
+  '己': [
+    { branch: '巳', cat: '井', point: '隱白' },
+    { branch: '未', cat: '滎', point: '魚際' },
+    { branch: '酉', cat: '俞', point: '太谿', yuan: '太白' },
+    { branch: '亥', cat: '經', point: '中封' },
+    { branch: '丑', cat: '合', point: '少海' },
+    { branch: '卯', cat: '重見', point: '間使', note: '包絡經金' }
+  ],
+  '庚': [
+    { branch: '辰', cat: '井', point: '商陽' },
+    { branch: '午', cat: '滎', point: '通谷' },
+    { branch: '申', cat: '俞', point: '足臨泣', yuan: '合谷' },
+    { branch: '戌', cat: '經', point: '陽谷' },
+    { branch: '子', cat: '合', point: '足三里' },
+    { branch: '寅', cat: '重見', point: '天井', note: '三焦合土' }
+  ],
+  '辛': [
+    { branch: '卯', cat: '井', point: '少商' },
+    { branch: '巳', cat: '滎', point: '然谷' },
+    { branch: '未', cat: '俞', point: '太衝', yuan: '太淵' },
+    { branch: '酉', cat: '經', point: '靈道' },
+    { branch: '亥', cat: '合', point: '陰陵泉' },
+    { branch: '丑', cat: '重見', point: '曲澤', note: '包絡合水' }
+  ],
+  '壬': [
+    { branch: '寅', cat: '井', point: '至陰' },
+    { branch: '辰', cat: '滎', point: '俠谿' },
+    { branch: '午', cat: '俞', point: '後谿', yuan: '京骨', yuan2: '陽池' },
+    { branch: '申', cat: '經', point: '解谿' },
+    { branch: '戌', cat: '合', point: '曲池' },
+    { branch: '子', cat: '重見', point: '關衝', note: '三焦井金' }
+  ],
+  '癸': [
+    { branch: '亥', cat: '井', point: '湧泉' },
+    { branch: '丑', cat: '滎', point: '行間' },
+    { branch: '卯', cat: '俞', point: '神門', yuan: '太谿', yuan2: '大陵' },
+    { branch: '巳', cat: '經', point: '商丘' },
+    { branch: '未', cat: '合', point: '尺澤' },
+    { branch: '酉', cat: '重見', point: '中衝', note: '包絡井木' }
+  ]
+};
+
 /* 計算法清單：available 為 true 表示 v1 已實作其餘先標待研究，不產生假結果 */
 const RULES = [
   { id: 'motherchild', name: '母子補瀉', engine: 'ENG-05', available: true,  version: 'MC-v0.2',
     desc: '虛補母穴、實瀉子穴，按本經五輸五行取穴' },
-  { id: 'najia',       name: '納甲法',   engine: 'ENG-06', available: false, version: 'NAJIA-v0.0',
-    desc: '按日干時干開穴；閉穴時以合日互用補救（待開穴表與原穴資料）' },
+  { id: 'najia',       name: '納甲法',   engine: 'ENG-06', available: true,  version: 'NAJIA-v0.1',
+    desc: '按日干納經、時辰查表開井滎俞經合；俞穴兼過原穴，重見納三焦心包' },
   { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1',
     desc: '依時辰推當令經脈與五輸穴' },
   { id: 'wumen',       name: '五門十變', engine: 'ENG-08/09/10', available: true, version: 'WMT-v0.1',
