@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>十二經選擇器 · 三版預覽</title>
+<style>
+:root{
+  --canvas:#0B120F; --world:#15231C;
+  --surface:rgba(255,255,255,.05); --surface-2:rgba(255,255,255,.09);
+  --ink:#F1EEE6; --dim:rgba(241,238,230,.62); --faint:rgba(241,238,230,.38);
+  --line:rgba(241,238,230,.1); --line-2:rgba(241,238,230,.16);
+  --key:#D6543C; --key-soft:rgba(214,84,60,.16); --key-ink:#FBEDE9;
+  --wood:#74B57E; --fire:#D6543C; --earth:#C9A25E; --metal:#D9D4C5; --water:#5E8AAE;
+  --r-shell:30px; --r-card:18px; --r-control:10px; --r-pill:999px;
+  --ease:cubic-bezier(.22,.75,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(130% 90% at 50% 8%,#101B16,#060908 72%);color:var(--ink);
+  font-family:-apple-system,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;min-height:100vh;padding:34px 26px 60px}
+h1{font-family:"Noto Serif SC","Songti SC",serif;font-size:22px;letter-spacing:.02em}
+.sub{color:var(--dim);font-size:13px;margin-top:6px}
+.deck{display:flex;gap:26px;flex-wrap:wrap;margin-top:28px;align-items:flex-start}
+.frame{width:390px;flex:0 0 auto}
+.frame-label{display:flex;align-items:baseline;gap:10px;margin:0 4px 12px}
+.frame-label .tag{font-family:"Noto Serif SC",serif;font-size:16px;font-weight:700;color:var(--key-ink);
+  background:var(--key-soft);border:1px solid var(--key);border-radius:var(--r-pill);padding:3px 12px}
+.frame-label p{color:var(--dim);font-size:12.5px}
+.phone{width:390px;height:760px;border-radius:var(--r-shell);background:var(--canvas);
+  box-shadow:0 0 0 11px #161E1A,0 0 0 13px #2A352F,0 44px 100px rgba(0,0,0,.42);
+  padding:18px 16px;overflow:hidden;position:relative}
+.rail{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:8px 14px;border-radius:var(--r-pill);background:var(--surface);border:1px solid var(--line);
+  font-size:13px;color:var(--dim)}
+.chip.on{background:var(--key-soft);border-color:var(--key);color:var(--key-ink);font-weight:600}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:14px}
+.sec{font-size:13px;color:var(--dim);margin:2px 0 12px}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .k{width:64px;font-size:13px;color:var(--dim);flex:0 0 auto}
+.dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.el-wood{background:var(--wood)} .el-fire{background:var(--fire)} .el-earth{background:var(--earth)}
+.el-metal{background:var(--metal)} .el-water{background:var(--water)}
+
+/* ── A 內聯分組網格 ── */
+.grp-title{font-size:12px;color:var(--faint);letter-spacing:.08em;margin:10px 0 8px}
+.grp-title:first-of-type{margin-top:2px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.m-btn{display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:var(--r-control);
+  background:var(--surface-2);border:1px solid var(--line);text-align:left}
+.m-btn .nm{font-size:12.5px;line-height:1.25}
+.m-btn .yy{font-size:10.5px;color:var(--faint);margin-top:2px}
+.m-btn.sel{background:var(--key-soft);border-color:var(--key)}
+.m-btn.sel .nm{color:var(--key-ink);font-weight:600}
+
+/* ── B 底部彈層列表 ── */
+.trigger{display:flex;align-items:center;gap:8px;width:100%;padding:11px 12px;border-radius:var(--r-control);
+  background:var(--surface-2);border:1px solid var(--line);font-size:14px}
+.trigger .caret{margin-left:auto;color:var(--faint)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--world);border-radius:22px 22px 0 0;
+  border-top:1px solid var(--line-2);padding:12px 16px 22px;box-shadow:0 -18px 50px rgba(0,0,0,.5)}
+.sheet .grab{width:38px;height:4px;border-radius:2px;background:var(--line-2);margin:0 auto 14px}
+.sheet h3{font-family:"Noto Serif SC",serif;font-size:17px;margin-bottom:14px}
+.seg{display:flex;gap:6px;margin-bottom:12px;background:var(--surface);border-radius:var(--r-pill);padding:4px}
+.seg button{flex:1;height:34px;border-radius:var(--r-pill);font-size:13px;color:var(--dim);
+  background:transparent;border:1px solid var(--line-2)}
+.seg button.on{background:var(--surface-2);color:var(--ink);font-weight:600;border-color:var(--line-2)}
+.list{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow:hidden}
+.l-item{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:var(--r-control)}
+.l-item .nm{flex:1;font-size:14px}
+.l-item .yy{font-size:11.5px;color:var(--faint)}
+.l-item.sel{background:var(--key-soft)}
+.l-item.sel .nm{color:var(--key-ink);font-weight:600}
+.l-item .bar{width:3px;height:22px;border-radius:2px}
+.go{margin-top:16px;height:46px;border-radius:var(--r-control);background:var(--key);color:var(--key-ink);font-weight:700;width:100%}
+
+/* ── C 陰陽雙列對照 ── */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.col-head{font-size:12px;color:var(--faint);letter-spacing:.08em;padding:0 4px 8px}
+.col{display:flex;flex-direction:column;gap:7px}
+.c-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--r-control);
+  background:var(--surface-2);border:1px solid var(--line)}
+.c-item .nm{font-size:12px;line-height:1.2}
+.c-item .el{margin-left:auto;font-size:10.5px;color:var(--faint)}
+.c-item.sel{background:var(--key-soft);border-color:var(--key)}
+.c-item.sel .nm{color:var(--key-ink);font-weight:600}
+.layer{font-size:11px;color:var(--faint);margin:8px 4px 0}
+.note{margin-top:12px;font-size:11.5px;color:var(--faint);line-height:1.6}
+</style>
+</head>
+<body>
+<h1>十二經選擇器 · 三版預覽</h1>
+<p class="sub">正式程式尚未改動；以下三版沿用現有深色磨砂主題，選中狀態皆為「足少陰腎經」。選定版本後再接入 app。</p>
+
+<div class="deck" id="deck"></div>
+
+<script>
+const EL = { wood:'木', fire:'火', earth:'土', metal:'金', water:'水' };
+const M = [
+  {id:'lung',name:'手太陰肺經',yy:'陰經 · 金',el:'metal',polar:'yin',hand:'手'},
+  {id:'pericardium',name:'手厥陰心包經',yy:'陰經 · 火',el:'fire',polar:'yin',hand:'手'},
+  {id:'heart',name:'手少陰心經',yy:'陰經 · 火',el:'fire',polar:'yin',hand:'手'},
+  {id:'spleen',name:'足太陰脾經',yy:'陰經 · 土',el:'earth',polar:'yin',hand:'足'},
+  {id:'liver',name:'足厥陰肝經',yy:'陰經 · 木',el:'wood',polar:'yin',hand:'足'},
+  {id:'kidney',name:'足少陰腎經',yy:'陰經 · 水',el:'water',polar:'yin',hand:'足',sel:true},
+  {id:'largeintestine',name:'手陽明大腸經',yy:'陽經 · 金',el:'metal',polar:'yang',hand:'手'},
+  {id:'sanjiao',name:'手少陽三焦經',yy:'陽經 · 火',el:'fire',polar:'yang',hand:'手'},
+  {id:'smallintestine',name:'手太陽小腸經',yy:'陽經 · 火',el:'fire',polar:'yang',hand:'手'},
+  {id:'stomach',name:'足陽明胃經',yy:'陽經 · 土',el:'earth',polar:'yang',hand:'足'},
+  {id:'gallbladder',name:'足少陽膽經',yy:'陽經 · 木',el:'wood',polar:'yang',hand:'足'},
+  {id:'bladder',name:'足太陽膀胱經',yy:'陽經 · 水',el:'water',polar:'yang',hand:'足'}
+];
+const sel = m => m.sel ? 'sel' : '';
+const dot = el => `<span class="dot el-${el}"></span>`;
+
+function rail(){ return `<div class="rail"><span class="chip on">母子補瀉</span><span class="chip">納子法</span><span class="chip">納甲法</span><span class="chip">五門十變</span></div>`; }
+
+/* A 內聯分組網格 */
+function variantA(){
+  const yin = M.filter(m=>m.polar==='yin'), yang = M.filter(m=>m.polar==='yang');
+  const group = arr => `<div class="grid">` + arr.map(m=>`
+    <button class="m-btn ${sel(m)}">${dot(m.el)}<span><div class="nm">${m.name}</div><div class="yy">${EL[m.el]} · ${m.hand}經</div></span></button>
+  `).join('') + `</div>`;
+  return `<div class="card">
+    <div class="sec">病經</div>
+    <div class="grp-title">陰經</div>${group(yin)}
+    <div class="grp-title">陽經</div>${group(yang)}
+  </div>`;
+}
+
+/* B 底部彈層列表 */
+function variantB(){
+  const rows = M.filter(m=>m.polar==='yin').map(m=>`
+    <div class="l-item ${sel(m)}"><span class="bar el-${m.el}"></span><span class="nm">${m.name}</span><span class="yy">${m.yy}</span></div>`).join('');
+  return `<div class="card">
+    <div class="row"><span class="k">病經</span>
+      <div class="trigger">${dot('water')}足少陰腎經<svg class="caret" width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg></div>
+    </div>
+  </div>
+  <div class="sheet">
+    <div class="grab"></div><h3>選擇病經</h3>
+    <div class="seg"><button class="on">陰經</button><button>陽經</button></div>
+    <div class="list">${rows}</div>
+    <button class="go">確定</button>
+  </div>`;
+}
+
+/* C 陰陽雙列對照 */
+function variantC(){
+  const yin = M.filter(m=>m.polar==='yin'), yang = M.filter(m=>m.polar==='yang');
+  const col = arr => `<div class="col">` + arr.map(m=>`
+    <div class="c-item ${sel(m)}">${dot(m.el)}<span class="nm">${m.name}</span><span class="el">${EL[m.el]}</span></div>
+  `).join('') + `</div>`;
+  return `<div class="card">
+    <div class="sec">病經 · 陰陽對照</div>
+    <div class="cols">
+      <div><div class="col-head">陰經</div>${col(yin)}</div>
+      <div><div class="col-head">陽經</div>${col(yang)}</div>
+    </div>
+  </div>`;
+}
+
+const frames = [
+  {t:'A', d:'內聯分組網格', body:variantA(), note:'A 版：選單直接展開在卡片內，陰／陽兩段、兩欄網格；免開彈層，一眼看全十二經，點選即時生效。'},
+  {t:'B', d:'底部彈層列表', body:variantB(), note:'B 版：沿用底部彈層，列表加五行色條與陰陽分段；點列選取、確定後關閉，介面最接近現有操作習慣。'},
+  {t:'C', d:'陰陽雙列對照', body:variantC(), note:'C 版：陰陽兩列並排對照，手足經同列排列；適合快速比對表裡配屬，卡片高度最緊湊。'}
+];
+document.getElementById('deck').innerHTML = frames.map(f=>`
+  <div class="frame">
+    <div class="frame-label"><span class="tag">版本 ${f.t}</span><p>${f.d}</p></div>
+    <div class="phone">${rail()}${f.body}</div>
+    <p class="note">${f.note}</p>
+  </div>`).join('');
+</script>
+</body>
+</html>

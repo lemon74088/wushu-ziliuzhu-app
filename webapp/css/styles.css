@@ -131,6 +131,19 @@ img,svg{display:block;max-width:100%}
 .def-group{display:flex;gap:8px;flex-wrap:wrap}
 .def-group .chip{padding:7px 12px;font-size:12.5px}
 
+/* 五門十變專用：陰陽雙列經脈選擇（版本 C） */
+.mer-c{padding:10px 0 4px}
+.mer-c-head{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;color:var(--faint);letter-spacing:.08em;padding:0 4px 8px}
+.mer-c-cols{display:grid;grid-template-columns:1fr 1fr;gap:7px 10px}
+.mer-c-col{display:flex;flex-direction:column;gap:7px}
+.mer-c-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--r-control);
+  background:var(--surface-2);border:1px solid var(--line);text-align:left;min-height:24px}
+.mer-c-item .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.mer-c-item .nm{font-size:12px;line-height:1.25}
+.mer-c-item .el{margin-left:auto;font-size:10.5px;color:var(--faint)}
+.mer-c-item.sel{background:var(--key-soft);border-color:var(--key)}
+.mer-c-item.sel .nm{color:var(--key-ink);font-weight:600}
+
 .result{border-color:var(--line-2)}
 .result .r-head{padding:18px 16px 12px}
 .result .r-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);letter-spacing:.08em}

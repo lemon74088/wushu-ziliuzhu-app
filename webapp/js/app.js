@@ -111,9 +111,43 @@ buildMeridianOptions();
 meridianSelect.value = state.meridian;
 meridianSelect.onchange = () => {
   state.meridian = meridianSelect.value;
-  $('meridianLabel').textContent = I18N.t(state.meridian);
+  syncMeridianPick();
   liveRecalc();
 };
+
+/* 五門十變專用：陰陽雙列經脈選擇（版本 C） */
+const merPickerCols = $('merPickerCols');
+function buildMeridianPickerC() {
+  merPickerCols.innerHTML = '';
+  const cols = { yin: [], yang: [] };
+  MERIDIANS.forEach(m => cols[m.polar].push(m));
+  ['yin', 'yang'].forEach(pol => {
+    const col = document.createElement('div');
+    col.className = 'mer-c-col';
+    cols[pol].forEach(m => {
+      const b = document.createElement('button');
+      b.className = 'mer-c-item';
+      b.dataset.name = m.name;
+      b.innerHTML = `<span class="dot" style="background:${EL[m.element].color}"></span>` +
+        `<span class="nm">${I18N.t(m.name)}</span><span class="el">${EL[m.element].name}</span>`;
+      b.onclick = () => {
+        state.meridian = m.name;
+        syncMeridianPick();
+        liveRecalc();
+      };
+      col.appendChild(b);
+    });
+    merPickerCols.appendChild(col);
+  });
+}
+function syncMeridianPick() {
+  merPickerCols.querySelectorAll('.mer-c-item').forEach(b =>
+    b.classList.toggle('sel', b.dataset.name === state.meridian));
+  meridianSelect.value = state.meridian;
+  $('meridianLabel').textContent = I18N.t(state.meridian);
+}
+buildMeridianPickerC();
+syncMeridianPick();
 
 const shichenSelect = $('shichenSelect');
 function buildShichenOptions() {
@@ -382,7 +416,10 @@ async function calculate(input, { save = true } = {}) {
 /* 條件變更即時重算（不寫入歷史） */
 function liveRecalc() {
   const needMeridian = ['motherchild', 'wumen'].includes(state.mode);
+  const isWumen = state.mode === 'wumen';
   $('fieldCard').hidden = !needMeridian;
+  $('merTriggerRow').hidden = isWumen;
+  $('merPickerC').hidden = !isWumen;
   $('defGroup').hidden = state.mode !== 'motherchild';
   calculate(currentInput(), { save: false });
 }
@@ -495,17 +532,16 @@ $('modalOk').onclick = () => {
   state.date = $('dateInput').value;
   state.shichen = shichenSelect.value;
   state.meridian = meridianSelect.value;
-  $('meridianLabel').textContent = I18N.t(state.meridian);
+  syncMeridianPick();
   refreshDial();
   openModal(false);
   liveRecalc();
 };
 
 function syncControls() {
-  meridianSelect.value = state.meridian;
+  syncMeridianPick();
   shichenSelect.value = state.shichen;
   $('dateInput').value = state.date;
-  $('meridianLabel').textContent = I18N.t(state.meridian);
   ruleRail.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.rule === state.mode));
   $('defGroup').querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.def === state.def));
 }
