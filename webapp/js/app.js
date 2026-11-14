@@ -381,7 +381,7 @@ async function calculate(input, { save = true } = {}) {
 
 /* 條件變更即時重算（不寫入歷史） */
 function liveRecalc() {
-  const needMeridian = ['motherchild', 'wumen', 'huhe', 'huahua'].includes(state.mode);
+  const needMeridian = ['motherchild', 'wumen'].includes(state.mode);
   $('fieldCard').hidden = !needMeridian;
   $('defGroup').hidden = state.mode !== 'motherchild';
   calculate(currentInput(), { save: false });
@@ -463,7 +463,8 @@ histList.addEventListener('click', async e => {
   } else if (b.dataset.act === 'review') {
     toast(I18N.t(`舊版覆盤：規則 ${h.snapshot.ruleVersion} · 資料 ${h.snapshot.dataVersion}`));
   } else if (b.dataset.act === 'rerun') {
-    state.mode = h.input.mode; state.meridian = h.input.meridian; state.def = h.input.def;
+    state.mode = ({ huhe: 'wumen', huahua: 'wumen' })[h.input.mode] || h.input.mode;
+    state.meridian = h.input.meridian; state.def = h.input.def;
     state.date = h.input.date; state.shichen = h.input.shichen;
     syncControls();
     await calculate(h.input);
