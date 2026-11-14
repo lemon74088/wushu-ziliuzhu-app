@@ -15,6 +15,12 @@ function pointByElement(m, el) {
   return { category: m.pts[i][0], name: m.pts[i][1], element: el };
 }
 
+/* 本經五輸穴清單（含五行） */
+function shuList(m) {
+  const order = PT_EL[m.polar];
+  return m.pts.map((p, i) => ({ category: p[0], name: p[1], element: order[i] }));
+}
+
 /* ENG-05 母子補瀉：虛補母穴、實瀉子穴，按本經五輸五行取穴，另列母經／子經參考 */
 function motherChild(rule, input) {
   const m = meridianByName(input.meridian);
@@ -26,6 +32,7 @@ function motherChild(rule, input) {
   const childEl = SHENG[el];
   const motherPt = pointByElement(m, motherEl);
   const childPt = pointByElement(m, childEl);
+  const benPt = pointByElement(m, el);
   const motherMers = meridiansByElement(motherEl).map(x => x.name);
   const childMers = meridiansByElement(childEl).map(x => x.name);
 
@@ -59,6 +66,14 @@ function motherChild(rule, input) {
     mer: `${m.name} · ${direction}`,
     sub,
     element: targetEl,
+    merId: m.id,
+    info: [
+      { label: '補法母穴', pt: motherPt },
+      { label: '瀉法子穴', pt: childPt },
+      { label: '本穴', pt: benPt },
+      { label: '原穴', pt: null }
+    ],
+    shu: shuList(m),
     steps,
     meta: [
       { label: `引擎 ${rule.engine}`, kind: '' },
@@ -79,6 +94,7 @@ function nazu(rule, input) {
   }
   const order = PT_EL[m.polar];
   const pts = m.pts.map((p, i) => `${p[0]} ${p[1]}（${EL[order[i]].name}）`);
+  const benPt = pointByElement(m, m.element);
 
   const steps = [
     `納子流注：${branch}時氣血流注${m.name}。`,
@@ -92,6 +108,12 @@ function nazu(rule, input) {
     mer: `${m.name} · 當令`,
     sub: `此時（${input.shichen}）氣血流注${m.name}；取穴仍需配合虛實與典籍覆核。`,
     element: m.element,
+    merId: m.id,
+    info: [
+      { label: '本穴', pt: benPt },
+      { label: '原穴', pt: null }
+    ],
+    shu: shuList(m),
     steps,
     meta: [
       { label: `引擎 ${rule.engine}`, kind: '' },
@@ -111,6 +133,9 @@ function pendingResult(rule, input) {
     mer: `${rule.name} · ${rule.engine}`,
     sub: '此流派規則尚未完成核對與實作，v1 不提供開穴結果，避免未經證實的配穴進入正式計算。',
     element: null,
+    merId: null,
+    info: [],
+    shu: [],
     steps: [
       `所選規則：${rule.name}（${rule.engine}，版本 ${rule.version}）。`,
       '規則來源、例外與典籍出處尚待整理；目前狀態為「待研究」。',

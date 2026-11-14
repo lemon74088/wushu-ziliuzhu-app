@@ -17,9 +17,12 @@
   </div>
 
   <div class="topbar" id="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="選單">
+      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M32 64a8 8 0 0 1 8-8h176a8 8 0 0 1 0 16H40a8 8 0 0 1-8-8Zm0 64a8 8 0 0 1 8-8h176a8 8 0 0 1 0 16H40a8 8 0 0 1-8-8Zm8 56a8 8 0 0 0 0 16h176a8 8 0 0 0 0-16Z"/></svg>
+    </button>
     <div class="brand">
-      <h1>五腧穴·子午流注</h1>
-      <p data-i18n="本機計算 · 規則可追溯 · 記錄可復算">本機計算 · 規則可追溯 · 記錄可復算</p>
+      <h1>五腧穴·子午流注 V2.0</h1>
+      <p data-i18n="即時計算 · 流注開穴 · 五輸取穴 · 多法對照">即時計算 · 流注開穴 · 五輸取穴 · 多法對照</p>
     </div>
     <button class="icon-btn locale-btn" id="localeBtn" aria-label="切換繁簡">簡</button>
     <button class="icon-btn" aria-label="版本資訊" id="settingsBtn">
@@ -29,9 +32,25 @@
 
   <div id="flow">
 
-    <!-- ═══ 計算 ═══ -->
+    <!-- ═══ 首頁 · 即時流注 ═══ -->
     <section class="panel" data-panel="home">
-      <article class="card hero" id="dateCard" data-open-modal>
+      <article class="card date-card" id="dateCard" data-open-modal>
+        <div class="dc-top">
+          <div class="dc-main">
+            <div class="dc-date" id="metaDate">公曆 —</div>
+            <div class="dc-lunar" id="metaLunar">農曆 —</div>
+          </div>
+          <span class="badge" id="metaWeek">—</span>
+        </div>
+        <div class="dc-gz" id="metaGZ">干支 —</div>
+        <div class="dc-meta">
+          <span id="metaJieqi">節氣 —</span>
+          <span id="metaShengxiao">生肖 —</span>
+          <span id="metaShichen">時辰 —</span>
+        </div>
+      </article>
+
+      <article class="card dial-card">
         <div class="dial" id="dial">
           <svg viewBox="0 0 200 200" aria-hidden="true">
             <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="10"/>
@@ -45,16 +64,21 @@
             <span class="day" id="dialDay">本地日期</span>
           </div>
         </div>
-        <div class="date-meta">
-          <span class="chip" id="metaDate">公曆 —</span>
-          <span class="chip" id="metaLunar">農曆 —</span>
-          <span class="chip" id="metaJieqi">節氣 —</span>
-          <span class="chip" id="metaShengxiao">生肖 —</span>
-          <span class="chip" id="metaShichen">時辰 —</span>
+        <div class="dial-side">
+          <div class="ds-label" data-i18n="當值經脈">當值經脈</div>
+          <div class="ds-head">
+            <span class="ds-mer" id="sideMeridian">—</span>
+            <span class="el-tag" id="sideEl" hidden><span class="dot" id="sideElDot"></span><span id="sideElementTag">—</span></span>
+          </div>
+          <div class="ds-rows">
+            <div class="ds-row"><span data-i18n="時干支">時干支</span><b id="sideTimeGZ">—</b></div>
+            <div class="ds-row"><span data-i18n="對應經脈">對應經脈</span><b id="sideMerShort">—</b></div>
+            <div class="ds-row"><span data-i18n="五行屬性">五行屬性</span><b id="sideElement">—</b></div>
+          </div>
         </div>
       </article>
 
-      <div class="sec-label" data-i18n="選擇計算法">選擇計算法</div>
+      <div class="sec-label" data-i18n="計算方法">計算方法</div>
       <div class="rail" id="ruleRail"></div>
 
       <article class="card field" id="fieldCard" style="margin-top:14px">
@@ -79,11 +103,17 @@
         <div class="r-head">
           <span class="r-tag" id="resultTag" data-i18n="計算結果">計算結果</span>
           <div class="r-main">
+            <span class="r-open" data-i18n="開穴">開穴：</span>
             <span class="r-point" id="resultPoint">—</span>
             <span class="el-tag" id="resultElTag" hidden><span class="dot" id="resultElDot"></span><span id="resultEl">木</span></span>
           </div>
           <div class="r-mer" id="resultMer"></div>
           <p class="r-sub" id="resultSub"></p>
+        </div>
+        <div class="info-grid" id="infoGrid"></div>
+        <div class="shu-block">
+          <div class="shu-title" data-i18n="循經取穴（五輸穴）">循經取穴（五輸穴）</div>
+          <div class="shu-grid" id="shuGrid"></div>
         </div>
         <button class="r-toggle" data-expand data-i18n="展開推演依據">
           展開推演依據
@@ -95,6 +125,21 @@
         </div></div>
       </article>
 
+      <div class="quick">
+        <button class="quick-btn" id="quickReason">
+          <svg class="ic sm" viewBox="0 0 256 256" fill="currentColor"><path d="M48 48h160a8 8 0 0 1 8 8v144a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V56a8 8 0 0 1 8-8Zm24 32v16h112V80Zm0 40v16h112v-16Zm0 40v16h72v-16Z"/></svg>
+          <span data-i18n="推演依據">推演依據</span>
+        </button>
+        <button class="quick-btn" id="quickPoints">
+          <svg class="ic sm" viewBox="0 0 256 256" fill="currentColor"><path d="M200 40H56A16 16 0 0 0 40 56V200a16 16 0 0 0 16 16H200a16 16 0 0 0 16-16V56A16 16 0 0 0 200 40Zm0 80H136V56h64ZM120 56v64H56V56ZM56 136h64v64H56Zm144 64H136V136h64v64Z"/></svg>
+          <span data-i18n="經絡詳情">經絡詳情</span>
+        </button>
+        <button class="quick-btn" id="quickCompare">
+          <svg class="ic sm" viewBox="0 0 256 256" fill="currentColor"><path d="M104 64H56a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h48a8 8 0 0 0 8-8V72a8 8 0 0 0-8-8Zm96 0h-48a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h48a8 8 0 0 0 8-8V72a8 8 0 0 0-8-8Z"/></svg>
+          <span data-i18n="多法對照">多法對照</span>
+        </button>
+      </div>
+
       <div class="cta">
         <button class="go" id="calcBtn" data-i18n="記錄本次結果">記錄本次結果
           <svg class="ic sm" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
@@ -102,10 +147,26 @@
       </div>
     </section>
 
+    <!-- ═══ 計算方法列表 ═══ -->
+    <section class="panel" data-panel="calc" hidden>
+      <div class="sec-label" data-i18n="各種取穴法 · 獨立計算">各種取穴法 · 獨立計算</div>
+      <div id="methodList"></div>
+    </section>
+
     <!-- ═══ 穴庫 ═══ -->
     <section class="panel" data-panel="points" hidden>
-      <div class="sec-label" data-i18n="十二經 · 五腧穴">十二經 · 五腧穴</div>
+      <div class="seg" id="pointTabs">
+        <button class="seg-btn on" data-tab="mer" data-i18n="十二經脈">十二經脈</button>
+        <button class="seg-btn" data-tab="shu" data-i18n="五輸穴">五輸穴</button>
+        <button class="seg-btn" data-tab="query" data-i18n="穴位查詢">穴位查詢</button>
+      </div>
       <div id="merList"></div>
+    </section>
+
+    <!-- ═══ 推演依據 ═══ -->
+    <section class="panel" data-panel="reason" hidden>
+      <div class="sec-label" data-i18n="推演依據">推演依據</div>
+      <div id="reasonBody"></div>
     </section>
 
     <!-- ═══ 歷史 ═══ -->
@@ -123,12 +184,20 @@
 
   <nav class="tabbar">
     <button class="on" data-go="home">
-      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M240,128a8,8,0,0,1-8,8H204.94l-37.78,75.58A8,8,0,0,1,160,216h-.4a8,8,0,0,1-7.08-5.14L95.35,60.76,63.28,131.31A8,8,0,0,1,56,136H24a8,8,0,0,1,0-16H50.85L88.72,36.69a8,8,0,0,1,14.76.46l57.51,151,31.85-63.71A8,8,0,0,1,200,120h32A8,8,0,0,1,240,128Z"/></svg>
+      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128 28 36 104v104a8 8 0 0 0 8 8h56v-64h44v64h56a8 8 0 0 0 8-8V104Z"/></svg>
+      <span data-i18n="首頁">首頁</span>
+    </button>
+    <button data-go="calc">
+      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M64 32h128a16 16 0 0 1 16 16v160a16 16 0 0 1-16 16H64a16 16 0 0 1-16-16V48a16 16 0 0 1 16-16Zm20 36v20h32V68Zm48 0v20h32V68ZM84 112v20h32v-20Zm48 0v20h32v-20ZM84 156v20h32v-20Zm48 0v20h32v-20Z"/></svg>
       <span data-i18n="計算">計算</span>
     </button>
     <button data-go="points">
       <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M200,40H56A16,16,0,0,0,40,56V200a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,80H136V56h64ZM120,56v64H56V56ZM56,136h64v64H56Zm144,64H136V136h64v64Z"/></svg>
       <span data-i18n="穴庫">穴庫</span>
+    </button>
+    <button data-go="reason">
+      <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M48 48h160a8 8 0 0 1 8 8v144a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V56a8 8 0 0 1 8-8Zm24 32v16h112V80Zm0 40v16h112v-16Zm0 40v16h72v-16Z"/></svg>
+      <span data-i18n="推演">推演</span>
     </button>
     <button data-go="history">
       <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm-8-48A95.44,95.44,0,0,0,60.08,60.15C52.81,67.51,46.35,74.59,40,82V64a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H72a8,8,0,0,0,0-16H49c7.15-8.42,14.27-16.35,22.39-24.57a80,80,0,1,1,1.66,114.75,8,8,0,1,0-11,11.64A96,96,0,1,0,128,32Z"/></svg>

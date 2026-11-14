@@ -73,13 +73,20 @@ const NAZU_FLOW = {
 
 /* 計算法清單：available 為 true 表示 v1 已實作其餘先標待研究，不產生假結果 */
 const RULES = [
-  { id: 'motherchild', name: '母子補瀉', engine: 'ENG-05', available: true,  version: 'MC-v0.2' },
-  { id: 'najia',       name: '納甲法',   engine: 'ENG-06', available: false, version: 'NAJIA-v0.0' },
-  { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1' },
-  { id: 'wumen',       name: '五門十變', engine: 'ENG-08', available: false, version: 'WUMEN-v0.0' },
-  { id: 'huhe',        name: '互合法',   engine: 'ENG-09', available: false, version: 'MUTUAL-v0.0' },
-  { id: 'huahua',      name: '化合法',   engine: 'ENG-10', available: false, version: 'TRANS-v0.0' },
-  { id: 'merge',       name: '綜合計算', engine: 'ENG-11', available: false, version: 'MERGE-v0.0' }
+  { id: 'motherchild', name: '母子補瀉', engine: 'ENG-05', available: true,  version: 'MC-v0.2',
+    desc: '虛補母穴、實瀉子穴，按本經五輸五行取穴' },
+  { id: 'najia',       name: '納甲法',   engine: 'ENG-06', available: false, version: 'NAJIA-v0.0',
+    desc: '以天干地支配合經脈開閉穴' },
+  { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1',
+    desc: '依時辰推當令經脈與五輸穴' },
+  { id: 'wumen',       name: '五門十變', engine: 'ENG-08', available: false, version: 'WUMEN-v0.0',
+    desc: '十干合化、分經取穴' },
+  { id: 'huhe',        name: '互合法',   engine: 'ENG-09', available: false, version: 'MUTUAL-v0.0',
+    desc: '經絡互合、選穴配伍' },
+  { id: 'huahua',      name: '化合法',   engine: 'ENG-10', available: false, version: 'TRANS-v0.0',
+    desc: '虛實化法、五行配穴' },
+  { id: 'merge',       name: '綜合計算', engine: 'ENG-11', available: false, version: 'MERGE-v0.0',
+    desc: '多方法對照與結果比較' }
 ];
 
 const DATA_VERSION = 'DATA-v1.0';

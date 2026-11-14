@@ -29,18 +29,36 @@ function toast(msg) {
   toastT = setTimeout(() => toastEl.classList.remove('on'), 1800);
 }
 
+/* ISO 週數 */
+function isoWeek(d) {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = (t.getUTCDay() + 6) % 7;
+  t.setUTCDate(t.getUTCDate() - day + 3);
+  const first = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
+  const fday = (first.getUTCDay() + 6) % 7;
+  first.setUTCDate(first.getUTCDate() - fday + 3);
+  return 1 + Math.round((t - first) / 604800000);
+}
+
 /* ── 日曆圓盤：ENG-01 lunar 適配 ── */
 function refreshDial() {
   const c = Calendar.adapt(state.date, state.shichen);
   $('dialShichen').textContent = I18N.t(c.shichen);
   $('dialPillar').textContent = I18N.t(`時柱 · ${c.timeGZ}`);
   $('dialDay').textContent = I18N.t(`${c.dayGZ}日 · ${c.weekday}`);
-  $('metaDate').textContent = I18N.t(`公曆 ${c.date}`);
+  $('metaDate').textContent = I18N.t(`公曆 ${c.date}（${c.weekday}）`);
   $('metaLunar').textContent = I18N.t(`農曆 ${c.lunar}`);
+  $('metaGZ').textContent = I18N.t(`${c.yearGZ}年 ${c.monthGZ}月 ${c.dayGZ}日`);
   $('metaJieqi').textContent = I18N.t(`${c.jieqi}後`);
   $('metaShengxiao').textContent = I18N.t(`生肖 ${c.shengxiao}`);
   $('metaShichen').textContent = I18N.t(`時辰 ${c.shichen}`);
+  $('metaWeek').textContent = I18N.t(`第${isoWeek(new Date(c.date))}週`);
+  $('sideTimeGZ').textContent = I18N.t(c.timeGZ);
   return c;
+}
+
+function shortMer(name) {
+  return name.replace(/^(手|足)(太陰|陽明|厥陰|少陽|少陰|太陽)/, '');
 }
 
 /* ── 狀態列時間 ── */
@@ -130,6 +148,59 @@ for (let i = 0; i < 12; i++) {
   ticks.appendChild(l);
 }
 
+/* ── 計算方法列表 ── */
+const methodList = $('methodList');
+function buildMethodList() {
+  methodList.innerHTML = '';
+  RULES.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'method-row' + (r.available ? '' : ' todo');
+    row.innerHTML = `
+      <div class="m-ic">${I18N.t(r.name[0])}</div>
+      <div class="m-body">
+        <div class="m-name">${I18N.t(r.name)}</div>
+        <div class="m-desc">${I18N.t(r.desc)}</div>
+      </div>
+      <span class="badge ${r.available ? 'ok' : 'warn'} m-badge">${r.available ? I18N.t('已實作') : I18N.t('待研究')}</span>`;
+    row.onclick = () => {
+      state.mode = r.id;
+      syncControls();
+      liveRecalc();
+      switchPanel('home');
+    };
+    methodList.appendChild(row);
+  });
+}
+buildMethodList();
+
+/* ── 推演依據頁 ── */
+function renderReason() {
+  const body = $('reasonBody');
+  if (!state.lastResult) {
+    body.innerHTML = `<div class="empty">${I18N.t('尚無推演結果，先在首頁完成一次計算。')}</div>`;
+    return;
+  }
+  const { res, rule } = state.lastResult;
+  body.innerHTML = `
+    <div class="card reason-sec">
+      <div class="sec-label" style="margin-top:4px" data-i18n="推演流程">推演流程</div>
+      <div class="more-inner" style="border:0;padding:0 16px 16px">
+        ${res.steps.map((s, i) => `<div class="step"><span class="n">${i + 1}</span><span>${I18N.t(s)}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="card reason-sec">
+      <div class="sec-label" style="margin-top:4px" data-i18n="理論依據">理論依據</div>
+      <div class="reason-quote">${I18N.t('規則依教材五行相生與十二經流注次序整理；開穴處方須由執業醫師對照典籍覆核，本工具不提供診斷。')}</div>
+    </div>
+    <div class="card reason-sec">
+      <div class="sec-label" style="margin-top:4px" data-i18n="規則版本">規則版本</div>
+      <div class="r-meta" style="padding:0 16px 16px">
+        ${res.meta.map(b => `<span class="badge ${b.kind}">${I18N.t(b.label)}</span>`).join('')}
+        ${res.warnings.map(w => `<span class="badge warn">${I18N.t(w)}</span>`).join('')}
+      </div>
+    </div>`;
+}
+
 /* ── 穴庫渲染 ── */
 const merList = $('merList');
 function buildMerList() {
@@ -194,6 +265,47 @@ function renderResult(res, rule) {
     elTag.hidden = true;
   }
 
+  /* 當值經脈側欄 */
+  const m = res.merId ? MERIDIANS.find(x => x.id === res.merId) : null;
+  if (m) {
+    $('sideMeridian').textContent = I18N.t(m.name);
+    $('sideMerShort').textContent = I18N.t(shortMer(m.name));
+    const e = EL[m.element];
+    $('sideEl').hidden = false;
+    $('sideElementTag').textContent = I18N.t(e.name);
+    $('sideElement').textContent = I18N.t(e.name);
+    $('sideElDot').style.background = e.color; $('sideElDot').style.color = e.color;
+  } else {
+    $('sideMeridian').textContent = I18N.t('待研究');
+    $('sideMerShort').textContent = '—';
+    $('sideEl').hidden = true;
+    $('sideElement').textContent = '—';
+  }
+
+  /* 穴位信息：母／子／本／原（原穴資料待補） */
+  const ig = $('infoGrid');
+  ig.innerHTML = '';
+  (res.info || []).forEach(it => {
+    const cell = document.createElement('div');
+    cell.className = 'info-item';
+    const v = it.pt ? `${it.pt.name}（${it.pt.category}·${EL[it.pt.element].name}）` : '待補';
+    cell.innerHTML = `<div class="il">${I18N.t(it.label)}</div><div class="iv ${it.pt ? '' : 'muted'}">${I18N.t(v)}</div>`;
+    ig.appendChild(cell);
+  });
+
+  /* 循經五輸穴網格 */
+  const sg = $('shuGrid');
+  sg.innerHTML = '';
+  (res.shu || []).forEach(p => {
+    const e = EL[p.element];
+    const cell = document.createElement('div');
+    cell.className = 'shu-cell';
+    cell.innerHTML = `<div class="sc-cat">${I18N.t(p.category)}</div>` +
+      `<div class="sc-name">${I18N.t(p.name)}</div>` +
+      `<div class="sc-el" style="color:${e.color}">${I18N.t(e.name)}</div>`;
+    sg.appendChild(cell);
+  });
+
   $('stepList').innerHTML = res.steps.map((s, i) =>
     `<div class="step"><span class="n">${i + 1}</span><span>${I18N.t(s)}</span></div>`).join('');
 
@@ -206,6 +318,7 @@ function renderResult(res, rule) {
   if (tog) tog.firstChild.textContent = I18N.t('展開推演依據');
   card.hidden = false;
   card.classList.remove('open');
+  renderReason();
 }
 
 /* ── 計算 ── */
@@ -259,6 +372,19 @@ $('calcBtn').onclick = async () => {
   toast(I18N.t('已計算，記錄已保存'));
   $('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 };
+
+/* 首頁快捷入口 */
+$('quickReason').onclick = () => switchPanel('reason');
+$('quickPoints').onclick = () => switchPanel('points');
+$('quickCompare').onclick = () => toast(I18N.t('多法對照研究中'));
+$('menuBtn').onclick = () => toast(I18N.t('選單研究中'));
+
+/* 穴庫分頁切換（視覺分頁，查詢篩選待補） */
+$('pointTabs').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn');
+  if (!b) return;
+  document.querySelectorAll('#pointTabs .seg-btn').forEach(x => x.classList.toggle('on', x === b));
+});
 
 /* ── 歷史渲染 ── */
 const histList = $('histList');
@@ -404,6 +530,7 @@ function applyStatic() {
 }
 function rerenderAll() {
   buildRuleRail();
+  buildMethodList();
   buildMeridianOptions();
   buildShichenOptions();
   buildMerList();
@@ -411,6 +538,7 @@ function rerenderAll() {
   syncControls();
   renderHistory();
   if (state.lastResult) renderResult(state.lastResult.res, state.lastResult.rule);
+  else renderReason();
 }
 localeBtn.onclick = () => {
   const next = I18N.get() === 'zh-Hans' ? 'zh-Hant' : 'zh-Hans';
