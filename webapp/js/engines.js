@@ -58,7 +58,7 @@ function motherChild(rule, input) {
   }
 
   const fmt = p => p ? `${p.name}（${p.category}·${EL[p.element].name}）` : '—';
-  const pointText = picks.filter(Boolean).map(fmt).join('、');
+  const pointText = picks.filter(Boolean).map(p => p ? p.name : '—').join('、');
 
   const steps = [
     `病經「${m.name}」，五行屬${EL[el].name}。`,
@@ -145,22 +145,27 @@ function wumen(rule, input) {
   if (!pair) return { status: 'error', point: '無合化對', mer: '', sub: '此經未列入五門合化對（心包、三焦寄干，暫不論夫妻配穴）。', steps: [], meta: [], warnings: [] };
   const otherId = pair.a === m.id ? pair.b : pair.a;
   const otherM = MERIDIANS.find(x => x.id === otherId);
+  const selfBen = benOf(m);
   const otherBen = benOf(otherM);
 
   const steps = [
     `天干合化：${pair.pair}，${m.name}與${otherM.name}為夫妻經。`,
     `兩經相合化${EL[pair.element].name}之氣；所化之氣不等同兩經本氣。`,
-    '本規則為合化關係查詢；實際取穴另依互合法或化合法辨證選用。'
+    `兩經本穴並列：${selfBen.name}（${m.name}）、${otherBen.name}（${otherM.name}）；實際取穴另依互合法或化合法辨證選用。`
   ];
 
   return {
     status: 'ok',
-    point: `${m.name} ↔ ${otherM.name}`,
+    point: `${selfBen.name}＋${otherBen.name}`,
     mer: `${pair.pair} 合化${EL[pair.element].name}`,
-    sub: `${m.name}與${otherM.name}相合，化${EL[pair.element].name}之氣；僅供關係查詢，處方須配合虛實與典籍覆核。`,
+    sub: `${m.name}與${otherM.name}為夫妻經，相合化${EL[pair.element].name}之氣；兩經本穴並列，處方須配合虛實與典籍覆核。`,
     element: pair.element,
     merId: m.id,
-    info: [{ label: '所合之經本穴', pt: otherBen }],
+    info: [
+      { label: `本穴 · ${m.name}`, pt: selfBen },
+      { label: `本穴 · ${otherM.name}`, pt: otherBen },
+      { label: '所化之氣', pt: null, value: EL[pair.element].name }
+    ],
     shu: shuList(m),
     steps,
     meta: [
@@ -192,7 +197,7 @@ function huhe(rule, input) {
 
   return {
     status: 'ok',
-    point: `${benOther.name}（${benOther.category}·${EL[benOther.element].name}）`,
+    point: benOther.name,
     mer: `${otherM.name} · 互合借氣`,
     sub: `病經${m.name}，依互合法取所合之經${otherM.name}本穴${benOther.name}；一病一穴，借彼經之氣調此經之病。`,
     element: otherM.element,
