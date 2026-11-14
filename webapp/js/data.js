@@ -71,6 +71,15 @@ const NAZU_FLOW = {
   '申': 'bladder',     '酉': 'kidney',   '戌': 'pericardium',   '亥': 'sanjiao'
 };
 
+/* 五門十變合化對：甲己化土、乙庚化金、丙辛化水、丁壬化木、戊癸化火（表1） */
+const WUMEN_PAIRS = [
+  { pair: '甲己', a: 'gallbladder',    b: 'spleen',          element: 'earth' },
+  { pair: '乙庚', a: 'liver',          b: 'largeintestine',  element: 'metal' },
+  { pair: '丙辛', a: 'smallintestine', b: 'lung',           element: 'water' },
+  { pair: '丁壬', a: 'heart',          b: 'bladder',         element: 'wood' },
+  { pair: '戊癸', a: 'stomach',        b: 'kidney',          element: 'fire' }
+];
+
 /* 計算法清單：available 為 true 表示 v1 已實作其餘先標待研究，不產生假結果 */
 const RULES = [
   { id: 'motherchild', name: '母子補瀉', engine: 'ENG-05', available: true,  version: 'MC-v0.2',
@@ -79,12 +88,12 @@ const RULES = [
     desc: '以天干地支配合經脈開閉穴' },
   { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1',
     desc: '依時辰推當令經脈與五輸穴' },
-  { id: 'wumen',       name: '五門十變', engine: 'ENG-08', available: false, version: 'WUMEN-v0.0',
-    desc: '十干合化、分經取穴' },
-  { id: 'huhe',        name: '互合法',   engine: 'ENG-09', available: false, version: 'MUTUAL-v0.0',
-    desc: '經絡互合、選穴配伍' },
-  { id: 'huahua',      name: '化合法',   engine: 'ENG-10', available: false, version: 'TRANS-v0.0',
-    desc: '虛實化法、五行配穴' },
+  { id: 'wumen',       name: '五門十變', engine: 'ENG-08', available: true,  version: 'WUMEN-v0.1',
+    desc: '十干合化、夫妻經與所化之氣查詢' },
+  { id: 'huhe',        name: '互合法',   engine: 'ENG-09', available: true,  version: 'MUTUAL-v0.1',
+    desc: '病經取所合之經本穴，借氣調經' },
+  { id: 'huahua',      name: '化合法',   engine: 'ENG-10', available: true,  version: 'TRANS-v0.1',
+    desc: '兩經本穴並取，合化第三種五行之氣' },
   { id: 'merge',       name: '綜合計算', engine: 'ENG-11', available: false, version: 'MERGE-v0.0',
     desc: '多方法對照與結果比較' }
 ];

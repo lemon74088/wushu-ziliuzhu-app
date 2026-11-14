@@ -4,7 +4,19 @@ function runEngine(input) {
   const rule = RULES.find(r => r.id === input.mode) || RULES[0];
   if (!rule.available) return pendingResult(rule, input);
   if (rule.id === 'nazu') return nazu(rule, input);
+  if (rule.id === 'wumen') return wumen(rule, input);
+  if (rule.id === 'huhe') return huhe(rule, input);
+  if (rule.id === 'huahua') return huahua(rule, input);
   return motherChild(rule, input);
+}
+
+function pairOf(merId) {
+  return WUMEN_PAIRS.find(p => p.a === merId || p.b === merId) || null;
+}
+function benOf(m) { return pointByElement(m, m.element); }
+/* 化合補瀉目標：十干納經，心包寄癸、三焦寄壬不列入 */
+function tenByElement(el) {
+  return MERIDIANS.filter(m => m.element === el && m.id !== 'pericardium' && m.id !== 'sanjiao');
 }
 
 /* 取本經五行相符的五輸穴：母穴／子穴 */
@@ -122,6 +134,129 @@ function nazu(rule, input) {
       { label: '規則已對教材', kind: 'ok' }
     ],
     warnings: ['納子法為經脈當令參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
+  };
+}
+
+/* ENG-08 五門十變：查夫妻經與所化之氣（關係查詢，不出處方） */
+function wumen(rule, input) {
+  const m = meridianByName(input.meridian);
+  if (!m) return { status: 'error', point: '經脈找不到', mer: '', sub: '病經資料比對失敗。', steps: [], meta: [], warnings: [] };
+  const pair = pairOf(m.id);
+  if (!pair) return { status: 'error', point: '無合化對', mer: '', sub: '此經未列入五門合化對（心包、三焦寄干，暫不論夫妻配穴）。', steps: [], meta: [], warnings: [] };
+  const otherId = pair.a === m.id ? pair.b : pair.a;
+  const otherM = MERIDIANS.find(x => x.id === otherId);
+  const otherBen = benOf(otherM);
+
+  const steps = [
+    `天干合化：${pair.pair}，${m.name}與${otherM.name}為夫妻經。`,
+    `兩經相合化${EL[pair.element].name}之氣；所化之氣不等同兩經本氣。`,
+    '本規則為合化關係查詢；實際取穴另依互合法或化合法辨證選用。'
+  ];
+
+  return {
+    status: 'ok',
+    point: `${m.name} ↔ ${otherM.name}`,
+    mer: `${pair.pair} 合化${EL[pair.element].name}`,
+    sub: `${m.name}與${otherM.name}相合，化${EL[pair.element].name}之氣；僅供關係查詢，處方須配合虛實與典籍覆核。`,
+    element: pair.element,
+    merId: m.id,
+    info: [{ label: '所合之經本穴', pt: otherBen }],
+    shu: shuList(m),
+    steps,
+    meta: [
+      { label: `引擎 ${rule.engine}`, kind: '' },
+      { label: `規則版本 ${rule.version}`, kind: '' },
+      { label: `資料 ${DATA_VERSION}`, kind: '' },
+      { label: '規則已對教材', kind: 'ok' }
+    ],
+    warnings: ['五門十變為合化關係參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
+  };
+}
+
+/* ENG-09 互合法：病經取所合之經本穴，借氣調經 */
+function huhe(rule, input) {
+  const m = meridianByName(input.meridian);
+  if (!m) return { status: 'error', point: '經脈找不到', mer: '', sub: '病經資料比對失敗。', steps: [], meta: [], warnings: [] };
+  const pair = pairOf(m.id);
+  if (!pair) return { status: 'error', point: '無合化對', mer: '', sub: '此經未列入五門合化對，無法互合取穴。', steps: [], meta: [], warnings: [] };
+  const otherId = pair.a === m.id ? pair.b : pair.a;
+  const otherM = MERIDIANS.find(x => x.id === otherId);
+  const benOther = benOf(otherM);
+  const benSelf = benOf(m);
+
+  const steps = [
+    `病經「${m.name}」，與${otherM.name}相合（${pair.pair}）。`,
+    `互合法不取本經穴，逕取所合之經本穴：${benOther.name}（${benOther.category}·${EL[benOther.element].name}）。`,
+    '井穴位於指趾端、皮薄易痛，臨床可依「瀉井當瀉滎、補井當補合」代用；須由醫師依證選穴。'
+  ];
+
+  return {
+    status: 'ok',
+    point: `${benOther.name}（${benOther.category}·${EL[benOther.element].name}）`,
+    mer: `${otherM.name} · 互合借氣`,
+    sub: `病經${m.name}，依互合法取所合之經${otherM.name}本穴${benOther.name}；一病一穴，借彼經之氣調此經之病。`,
+    element: otherM.element,
+    merId: otherM.id,
+    info: [
+      { label: '所合經本穴', pt: benOther },
+      { label: '本經本穴', pt: benSelf }
+    ],
+    shu: shuList(otherM),
+    steps,
+    meta: [
+      { label: `引擎 ${rule.engine}`, kind: '' },
+      { label: `規則版本 ${rule.version}`, kind: '' },
+      { label: `資料 ${DATA_VERSION}`, kind: '' },
+      { label: '規則已對教材', kind: 'ok' }
+    ],
+    warnings: ['互合取穴為經絡調治參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
+  };
+}
+
+/* ENG-10 化合法：兩經本穴並取，合化第三種五行之氣，再論補母瀉子 */
+function huahua(rule, input) {
+  const m = meridianByName(input.meridian);
+  if (!m) return { status: 'error', point: '經脈找不到', mer: '', sub: '病經資料比對失敗。', steps: [], meta: [], warnings: [] };
+  const pair = pairOf(m.id);
+  if (!pair) return { status: 'error', point: '無合化對', mer: '', sub: '此經未列入五門合化對，無法化合配穴。', steps: [], meta: [], warnings: [] };
+  const otherId = pair.a === m.id ? pair.b : pair.a;
+  const otherM = MERIDIANS.find(x => x.id === otherId);
+  const benA = benOf(m);
+  const benB = benOf(otherM);
+  const transEl = pair.element;
+  const motherEl = SHENG_MOTHER[transEl];
+  const childEl = SHENG[transEl];
+  const fillMers = tenByElement(childEl).map(x => x.name);
+  const drainMers = tenByElement(motherEl).map(x => x.name);
+
+  const steps = [
+    `相合兩經：${m.name}本穴${benA.name}、${otherM.name}本穴${benB.name}。`,
+    `二穴並用，合化${EL[transEl].name}之氣；所化之氣非兩經本氣。`,
+    `虛則補其母：宜補${fillMers.join('、')}（${EL[childEl].name}）；實則瀉其子：宜瀉${drainMers.join('、')}（${EL[motherEl].name}）。`,
+    '井穴疼痛時可代以滎穴（瀉）或合穴（補）；臨床由醫師辨證選穴。'
+  ];
+
+  return {
+    status: 'ok',
+    point: `${benA.name}＋${benB.name}`,
+    mer: `${pair.pair}化${EL[transEl].name}`,
+    sub: `取${m.name}本穴${benA.name}與${otherM.name}本穴${benB.name}並用，合化${EL[transEl].name}之氣，再依虛實補母瀉子。`,
+    element: transEl,
+    merId: m.id,
+    info: [
+      { label: '本穴（病經）', pt: benA },
+      { label: '本穴（所合）', pt: benB },
+      { label: '所化之氣', pt: null, value: EL[transEl].name }
+    ],
+    shu: shuList(m),
+    steps,
+    meta: [
+      { label: `引擎 ${rule.engine}`, kind: '' },
+      { label: `規則版本 ${rule.version}`, kind: '' },
+      { label: `資料 ${DATA_VERSION}`, kind: '' },
+      { label: '規則已對教材', kind: 'ok' }
+    ],
+    warnings: ['化合配穴為整體補虛瀉實參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
   };
 }
 

@@ -288,7 +288,7 @@ function renderResult(res, rule) {
   (res.info || []).forEach(it => {
     const cell = document.createElement('div');
     cell.className = 'info-item';
-    const v = it.pt ? `${it.pt.name}（${it.pt.category}·${EL[it.pt.element].name}）` : '待補';
+    const v = it.pt ? `${it.pt.name}（${it.pt.category}·${EL[it.pt.element].name}）` : (it.value || '待補');
     cell.innerHTML = `<div class="il">${I18N.t(it.label)}</div><div class="iv ${it.pt ? '' : 'muted'}">${I18N.t(v)}</div>`;
     ig.appendChild(cell);
   });
@@ -363,7 +363,9 @@ async function calculate(input, { save = true } = {}) {
 
 /* 條件變更即時重算（不寫入歷史） */
 function liveRecalc() {
-  $('fieldCard').hidden = state.mode !== 'motherchild';
+  const needMeridian = ['motherchild', 'wumen', 'huhe', 'huahua'].includes(state.mode);
+  $('fieldCard').hidden = !needMeridian;
+  $('defGroup').hidden = state.mode !== 'motherchild';
   calculate(currentInput(), { save: false });
 }
 
