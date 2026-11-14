@@ -19,6 +19,22 @@ function tenByElement(el) {
   return MERIDIANS.filter(m => m.element === el && m.id !== 'pericardium' && m.id !== 'sanjiao');
 }
 
+/* 五門對照卡：同一病經下並列化合（虛/實）、互合、自合、表里通治占位 */
+function buildCompare(m, pair, otherM) {
+  const selfBen = benOf(m);
+  const otherBen = benOf(otherM);
+  const transEl = pair.element;
+  const fill = tenByElement(SHENG[transEl]).map(x => x.name);
+  const drain = tenByElement(SHENG_MOTHER[transEl]).map(x => x.name);
+  return [
+    { label: '虛證（化合法）', points: [selfBen.name, otherBen.name], note: `補 ${fill.join('、')}` },
+    { label: '實證（化合法）', points: [selfBen.name, otherBen.name], note: `瀉 ${drain.join('、')}` },
+    { label: '互合法', points: [otherBen.name], note: '取所合之經本穴，借氣調經' },
+    { label: '自合法', points: [selfBen.name], note: '本經本穴，穴性與本經五行相同' },
+    { label: '表里通治法', points: [], note: '待研究：表裡經與絡穴資料待核對' }
+  ];
+}
+
 /* 取本經五行相符的五輸穴：母穴／子穴 */
 function pointByElement(m, el) {
   const order = PT_EL[m.polar];
@@ -154,6 +170,8 @@ function wumen(rule, input) {
     `兩經本穴並列：${selfBen.name}（${m.name}）、${otherBen.name}（${otherM.name}）；實際取穴另依互合法或化合法辨證選用。`
   ];
 
+  const compare = buildCompare(m, pair, otherM);
+
   return {
     status: 'ok',
     point: `${selfBen.name}＋${otherBen.name}`,
@@ -161,6 +179,7 @@ function wumen(rule, input) {
     sub: `${m.name}與${otherM.name}為夫妻經，相合化${EL[pair.element].name}之氣；兩經本穴並列，處方須配合虛實與典籍覆核。`,
     element: pair.element,
     merId: m.id,
+    compare,
     info: [
       { label: `本穴 · ${m.name}`, pt: selfBen },
       { label: `本穴 · ${otherM.name}`, pt: otherBen },
@@ -196,6 +215,8 @@ function huhe(rule, input) {
     '井穴位於指趾端、皮薄易痛，臨床可依「瀉井當瀉滎、補井當補合」代用；須由醫師依證選穴。'
   ];
 
+  const compare = buildCompare(m, pair, otherM);
+
   return {
     status: 'ok',
     point: benOther.name,
@@ -203,6 +224,7 @@ function huhe(rule, input) {
     sub: `病經${m.name}，依互合法取所合之經${otherM.name}本穴${benOther.name}；一病一穴，借彼經之氣調此經之病，不取二穴合力。`,
     element: otherM.element,
     merId: otherM.id,
+    compare,
     info: [
       { label: '所合經本穴', pt: benOther },
       { label: '本經本穴', pt: benSelf }
@@ -242,6 +264,8 @@ function huahua(rule, input) {
     '井穴疼痛時可代以滎穴（瀉）或合穴（補）；臨床由醫師辨證選穴。'
   ];
 
+  const compare = buildCompare(m, pair, otherM);
+
   return {
     status: 'ok',
     point: `${benA.name}＋${benB.name}`,
@@ -249,6 +273,7 @@ function huahua(rule, input) {
     sub: `取${m.name}本穴${benA.name}與${otherM.name}本穴${benB.name}並用，合化${EL[transEl].name}之氣，再依虛實補母瀉子。`,
     element: transEl,
     merId: m.id,
+    compare,
     info: [
       { label: '本穴（病經）', pt: benA },
       { label: '本穴（所合）', pt: benB },

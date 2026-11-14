@@ -293,6 +293,24 @@ function renderResult(res, rule) {
     ig.appendChild(cell);
   });
 
+  /* 五門對照卡：虛/實化合、互合、自合、表里通治占位 */
+  const cc = $('compareCards');
+  cc.innerHTML = '';
+  if (res.compare && res.compare.length) {
+    cc.hidden = false;
+    res.compare.forEach(c => {
+      const empty = !c.points.length;
+      const card = document.createElement('div');
+      card.className = 'cmp-card';
+      card.innerHTML = `<div class="cmp-label">${I18N.t(c.label)}</div>` +
+        `<div class="cmp-points ${empty ? 'empty' : ''}">${I18N.t(empty ? '待研究' : c.points.join('、'))}</div>` +
+        `<div class="cmp-note">${I18N.t(c.note)}</div>`;
+      cc.appendChild(card);
+    });
+  } else {
+    cc.hidden = true;
+  }
+
   /* 循經五輸穴網格 */
   const sg = $('shuGrid');
   sg.innerHTML = '';

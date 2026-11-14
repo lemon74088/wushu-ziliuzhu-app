@@ -258,6 +258,13 @@ input[type=date],select{background:var(--surface-2);border:1px solid var(--line)
 .info-item .iv{font-size:14px;font-weight:600}
 .info-item .iv.muted{color:var(--faint);font-weight:400}
 
+.compare{display:flex;flex-direction:column;gap:10px;padding:14px 16px 0}
+.cmp-card{background:var(--surface-2);border:1px solid rgba(201,162,94,.30);border-radius:var(--r-control);padding:13px 14px}
+.cmp-label{color:var(--el-earth);font-weight:700;font-size:13.5px;margin-bottom:6px;letter-spacing:.02em}
+.cmp-points{font-size:17px;font-weight:600;letter-spacing:.02em}
+.cmp-points.empty{color:var(--faint);font-weight:500;font-size:14px}
+.cmp-note{margin-top:6px;font-size:12px;color:var(--dim);line-height:1.5}
+
 .shu-block{padding:14px 16px 0}
 .shu-title{font-size:12px;color:var(--dim);margin-bottom:10px;letter-spacing:.06em}
 .shu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
