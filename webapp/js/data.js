@@ -206,14 +206,14 @@ const NAJIA_TABLE = {
 
 /* 計算法清單：available 為 true 表示 v1 已實作其餘先標待研究，不產生假結果 */
 const RULES = [
-  { id: 'motherchild', name: '母子補瀉', engine: 'ENG-05', available: true,  version: 'MC-v0.2',
-    desc: '虛補母穴、實瀉子穴，按本經五輸五行取穴' },
-  { id: 'najia',       name: '納甲法',   engine: 'ENG-06', available: true,  version: 'NAJIA-v0.1',
-    desc: '按日干納經、時辰查表開井滎俞經合；俞穴兼過原穴，重見納三焦心包' },
-  { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1',
-    desc: '依時辰推當令經脈與五輸穴' },
   { id: 'wumen',       name: '五門十變', engine: 'ENG-08/09/10', available: true, version: 'WMT-v0.1',
     desc: '化合並取兩經本穴、互合借氣調經，同一病經並列對照卡' },
+  { id: 'motherchild', name: '母子補瀉', engine: 'ENG-05', available: true,  version: 'MC-v0.2',
+    desc: '虛補母穴、實瀉子穴，按本經五輸五行取穴' },
+  { id: 'nazu',        name: '納子法',   engine: 'ENG-07', available: true,  version: 'NAZU-v0.1',
+    desc: '依時辰推當令經脈與五輸穴' },
+  { id: 'najia',       name: '納甲法',   engine: 'ENG-06', available: true,  version: 'NAJIA-v0.1',
+    desc: '按日干納經、時辰查表開井滎俞經合；俞穴兼過原穴，重見納三焦心包' },
   { id: 'yuanluo',     name: '原絡配穴', engine: 'ENG-12', available: true, version: 'YUANLUO-v0.1',
     desc: '先病經取原穴為主，表裡後病經取絡穴為客，主客原絡相配' },
   { id: 'merge',       name: '綜合計算', engine: 'ENG-11', available: false, version: 'MERGE-v0.0',

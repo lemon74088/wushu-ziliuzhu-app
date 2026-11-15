@@ -1,12 +1,13 @@
 /* 計算層：v1 實作母子補瀉（ENG-05）；其餘規則回傳待研究狀態，不產生假結果 */
 
 function runEngine(input) {
-  const rule = RULES.find(r => r.id === input.mode) || RULES[0];
+  let rule = RULES.find(r => r.id === input.mode);
+  if (!rule) rule = { id: input.mode, name: input.mode, engine: '—', available: true, version: '—', desc: '' };
   if (!rule.available) return pendingResult(rule, input);
-  if (rule.id === 'nazu') return nazu(rule, input);
-  if (rule.id === 'najia') return najia(rule, input);
-  if (rule.id === 'wumen') return wumen(rule, input);
-  if (rule.id === 'yuanluo') return yuanluo(rule, input);
+  if (input.mode === 'nazu') return nazu(rule, input);
+  if (input.mode === 'najia') return najia(rule, input);
+  if (input.mode === 'wumen') return wumen(rule, input);
+  if (input.mode === 'yuanluo') return yuanluo(rule, input);
   if (input.mode === 'huhe') return huhe(rule, input);
   if (input.mode === 'huahua') return huahua(rule, input);
   return motherChild(rule, input);
