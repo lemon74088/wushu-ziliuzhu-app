@@ -236,6 +236,7 @@ function buildMethodList() {
       <div class="m-body">
         <div class="m-name">${I18N.t(r.name)}</div>
         <div class="m-desc">${I18N.t(r.desc)}</div>
+        <div class="m-axis"><span class="axis-tag">${I18N.t(r.axis)}</span><span class="m-basis">${I18N.t(`${r.basis}｜${r.time}`)}</span></div>
       </div>
       <span class="badge ${r.available ? 'ok' : 'warn'} m-badge">${r.available ? I18N.t('已實作') : I18N.t('待研究')}</span>`;
     row.onclick = () => {
@@ -249,15 +250,59 @@ function buildMethodList() {
 }
 buildMethodList();
 
+/* ── 三軸歸類與決策流程（對照《五法歸類與配穴決策》） ── */
+const AXIS_GUIDE = [
+  { axis: '時間軸', items: ['納甲法', '納子法', '合日互用'], basis: '據干支日時，答「何時開何穴」；合日互用僅算日干及其合日' },
+  { axis: '五行軸', items: ['化合', '互合', '母子補瀉'], basis: '據五行生克合化，答「何穴配何穴、補或瀉」；不需時辰' },
+  { axis: '病位軸', items: ['原絡配穴'], basis: '據表裡與發病先後，答「哪經為主、哪經為客」；不問虛實日時' }
+];
+const DECISION_STEPS = [
+  ['辨虛實', '四診定本經盛衰，定補或瀉——母子補瀉所據'],
+  ['辨病位與先後', '何經先病、何經後病，定原絡主客'],
+  ['參五行', '依化合、互合酌加穴，處理生克與肢節痹阻'],
+  ['察日定時', '查日干與時辰取時穴；閉時用合日互用或母子補瀉代之'],
+  ['定手法與量', '捻轉、提插、留針隨虛實而定'],
+  ['校真太陽時', '用時間法先校正當地真太陽時；經度每差一度約四分鐘']
+];
+
 /* ── 推演依據頁 ── */
 function renderReason() {
   const body = $('reasonBody');
+  const guide = `
+    <div class="card reason-sec">
+      <div class="sec-label" style="margin-top:4px" data-i18n="三軸歸類">三軸歸類</div>
+      <div class="more-inner" style="border:0;padding:0 16px 16px">
+        ${AXIS_GUIDE.map(g => `
+          <div class="axis-row">
+            <span class="axis-tag">${I18N.t(g.axis)}</span>
+            <div class="axis-body">
+              <div class="axis-items">${g.items.map(I18N.t).join('、')}</div>
+              <div class="m-basis">${I18N.t(g.basis)}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="card reason-sec">
+      <div class="sec-label" style="margin-top:4px" data-i18n="決策流程">決策流程（次序不可易）</div>
+      <div class="more-inner" style="border:0;padding:0 16px 16px">
+        ${DECISION_STEPS.map((s, i) => `
+          <div class="step">
+            <span class="n">${i + 1}</span>
+            <div class="axis-body">
+              <div class="step-title">${I18N.t(s[0])}</div>
+              <div class="m-basis">${I18N.t(s[1])}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="reason-quote" style="margin:0 16px 16px">${I18N.t('辨證在前、配穴在中、擇時在後；時間法之時穴合病則用、不合則捨，急症不待時，時穴可為佐使、不可為君主。')}</div>
+    </div>`;
+
   if (!state.lastResult) {
-    body.innerHTML = `<div class="empty">${I18N.t('尚無推演結果，先在首頁完成一次計算。')}</div>`;
+    body.innerHTML = guide + `<div class="empty">${I18N.t('尚無推演結果，先在首頁完成一次計算。')}</div>`;
     return;
   }
   const { res, rule } = state.lastResult;
-  body.innerHTML = `
+  body.innerHTML = guide + `
     <div class="card reason-sec">
       <div class="sec-label" style="margin-top:4px" data-i18n="推演流程">推演流程</div>
       <div class="more-inner" style="border:0;padding:0 16px 16px">
