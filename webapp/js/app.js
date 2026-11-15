@@ -569,10 +569,9 @@ async function calculate(input, { save = true } = {}) {
 /* 條件變更即時重算（不寫入歷史） */
 function liveRecalc() {
   const needMeridian = ['motherchild', 'wumen', 'yuanluo'].includes(state.mode);
-  const inline = ['wumen', 'yuanluo'].includes(state.mode);
   $('fieldCard').hidden = true;
-  $('meridianBtn').hidden = !needMeridian;
-  $('merPickerC').hidden = !inline;
+  $('meridianBtn').hidden = true;
+  $('merPickerC').hidden = !needMeridian;
   $('defRow').hidden = true;
   calculate(currentInput(), { save: false });
 }
