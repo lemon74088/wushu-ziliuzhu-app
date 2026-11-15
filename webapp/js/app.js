@@ -265,6 +265,16 @@ function buildMerList() {
   MERIDIANS.forEach(m => {
     const el = EL[m.element];
     const elOrder = PT_EL[m.polar];
+    /* 排穴次序：井 → 滎 → 輸 → 原 → 經 → 合；原穴五行同俞穴 */
+    const yuanName = YUAN_POINTS[m.id];
+    const ordered = [
+      { cat: m.pts[0][0], name: m.pts[0][1], el: EL[elOrder[0]] },
+      { cat: m.pts[1][0], name: m.pts[1][1], el: EL[elOrder[1]] },
+      { cat: m.pts[2][0], name: m.pts[2][1], el: EL[elOrder[2]] },
+      { cat: '原穴', name: yuanName, el: EL[elOrder[2]] },
+      { cat: m.pts[3][0], name: m.pts[3][1], el: EL[elOrder[3]] },
+      { cat: m.pts[4][0], name: m.pts[4][1], el: EL[elOrder[4]] }
+    ];
     const card = document.createElement('article');
     card.className = 'card mer';
     card.innerHTML = `
@@ -274,16 +284,13 @@ function buildMerList() {
           <div class="nm">${I18N.t(m.name)}</div>
           <div class="yy">${I18N.t(m.yy)}</div>
         </div>
-        <div class="m-pts">${m.pts.map(p => `<div class="p">${I18N.t(p[0])}<b>${I18N.t(p[1])}</b></div>`).join('')}</div>
+        <div class="m-pts">${ordered.map(p => `<div class="p">${I18N.t(p.cat === '原穴' ? '原' : p.cat)}<b>${I18N.t(p.name)}</b></div>`).join('')}</div>
       </div>
       <div class="more"><div class="more-inner">
         <table class="point-table">
           <thead><tr><th>${I18N.t('類別')}</th><th>${I18N.t('穴名')}</th><th>${I18N.t('五行')}</th></tr></thead>
-          <tbody>${m.pts.map((p, i) => {
-            const pe = EL[elOrder[i]];
-            return `<tr><td>${I18N.t(p[0])}</td><td>${I18N.t(p[1])}</td><td><span style="color:${pe.color}">${I18N.t(pe.name)}</span></td></tr>`;
-          }).join('')}
-            <tr><td>${I18N.t('原穴')}</td><td>${YUAN_POINTS[m.id]}</td><td><span style="color:${EL[m.element].color}">${I18N.t(EL[m.element].name)}</span></td></tr>
+          <tbody>${ordered.map(p =>
+            `<tr><td>${I18N.t(p.cat)}</td><td>${I18N.t(p.name)}</td><td><span style="color:${p.el.color}">${I18N.t(p.el.name)}</span></td></tr>`).join('')}
             <tr><td>${I18N.t('絡穴')}</td><td>${LUO_POINTS[m.id]}</td><td>${I18N.t('表裡')} · ${I18N.t(shortMer(MERIDIANS.find(x => x.id === TABLELI[m.id]).name))}</td></tr>
           </tbody>
         </table>
