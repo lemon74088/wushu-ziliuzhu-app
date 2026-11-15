@@ -105,6 +105,11 @@ img,svg{display:block;max-width:100%}
 .dial-core .pillar{font-size:13px;color:var(--dim);letter-spacing:.1em}
 .dial-core .day{font-size:11px;color:var(--faint);margin-top:3px}
 #dialArc{filter:drop-shadow(0 0 5px rgba(214,84,60,.75)) drop-shadow(0 0 16px rgba(214,84,60,.35))}
+.ring-item text{text-anchor:middle;dominant-baseline:central}
+.ring-hour{fill:var(--faint);font-size:7.5px}
+.ring-mer{fill:var(--dim);font-size:9px;font-weight:600}
+.ring-item.on .ring-hour{fill:var(--key-ink)}
+.ring-item.on .ring-mer{fill:var(--key-ink)}
 .date-meta{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin-top:10px;font-size:12.5px;color:var(--dim)}
 .date-meta b{color:var(--ink);font-weight:600}
 
@@ -252,11 +257,11 @@ input[type=date],select{background:var(--surface-2);border:1px solid var(--line)
 .dc-gz{font-size:12.5px;color:var(--dim);margin-top:10px;letter-spacing:.03em}
 .dc-meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12px;color:var(--faint)}
 
-.dial-card{display:flex;gap:16px;padding:18px 16px;align-items:center}
-.dial-card .dial{width:150px;height:150px;flex:0 0 150px;margin:0}
-.dial-card .dial-core .shichen{font-size:22px}
+.dial-card{display:flex;flex-direction:column;gap:14px;padding:18px 16px;align-items:center}
+.dial-card .dial{width:196px;height:196px;flex:none;margin:0 auto}
+.dial-card .dial-core .shichen{font-size:24px}
 .dial-card .dial-core .pillar{font-size:11.5px}
-.dial-side{flex:1;min-width:0}
+.dial-side{flex:1;min-width:0;width:100%}
 .ds-label{font-size:11.5px;color:var(--dim);letter-spacing:.08em}
 .ds-head{display:flex;align-items:center;gap:8px;margin:6px 0 12px;flex-wrap:wrap}
 .ds-mer{font-family:"Noto Serif SC",serif;font-size:19px;font-weight:700;line-height:1.2}

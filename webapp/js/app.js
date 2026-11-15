@@ -54,6 +54,9 @@ function refreshDial() {
   $('metaShichen').textContent = I18N.t(`時辰 ${c.shichen}`);
   $('metaWeek').textContent = I18N.t(`第${isoWeek(new Date(c.date))}週`);
   $('sideTimeGZ').textContent = I18N.t(c.timeGZ);
+  const idx = SHICHEN.findIndex(s => s[0] === c.shichen[0]);
+  ringItems.forEach((g, k) => g.classList.toggle('on', k === idx));
+  $('dialArc').setAttribute('transform', `rotate(${-90 + idx * 30} 100 100)`);
   return c;
 }
 
@@ -168,19 +171,32 @@ shichenSelect.onchange = () => {
 };
 $('dateInput').value = state.date;
 
-/* ── 圓盤刻度 ── */
-const ticks = $('dialTicks');
-for (let i = 0; i < 12; i++) {
-  const a = i * 30 * Math.PI / 180;
-  const x1 = 100 + Math.cos(a) * 74, y1 = 100 + Math.sin(a) * 74;
-  const x2 = 100 + Math.cos(a) * 68, y2 = 100 + Math.sin(a) * 68;
-  const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-  l.setAttribute('x1', x1); l.setAttribute('y1', y1);
-  l.setAttribute('x2', x2); l.setAttribute('y2', y2);
-  l.setAttribute('stroke', i === 0 ? '#D6543C' : 'rgba(255,255,255,.18)');
-  l.setAttribute('stroke-width', i === 0 ? 3 : 2);
-  ticks.appendChild(l);
-}
+/* ── 24 小時子午流注環：子時居頂，順時針對應十二經 ── */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const ring = $('dialRing');
+const ringItems = [];
+(function buildRing() {
+  const R_HOUR = 92, R_MER = 70;
+  SHICHEN.forEach((label, i) => {
+    const branch = label[0];
+    const mer = MERIDIANS.find(m => m.id === NAZU_FLOW[branch]);
+    const short = shortMer(mer.name).replace(/經$/, '');
+    const hour = String(parseInt((label.match(/(\d+):/) || [])[1], 10));
+    const ang = (-90 + i * 30) * Math.PI / 180;
+    const xH = 100 + Math.cos(ang) * R_HOUR, yH = 100 + Math.sin(ang) * R_HOUR;
+    const xM = 100 + Math.cos(ang) * R_MER, yM = 100 + Math.sin(ang) * R_MER;
+    const g = document.createElementNS(SVG_NS, 'g');
+    g.setAttribute('class', 'ring-item');
+    const h = document.createElementNS(SVG_NS, 'text');
+    h.setAttribute('x', xH); h.setAttribute('y', yH); h.setAttribute('class', 'ring-hour');
+    h.textContent = hour;
+    const m = document.createElementNS(SVG_NS, 'text');
+    m.setAttribute('x', xM); m.setAttribute('y', yM); m.setAttribute('class', 'ring-mer');
+    m.textContent = I18N.t(short);
+    g.appendChild(h); g.appendChild(m);
+    ring.appendChild(g); ringItems.push(g);
+  });
+})();
 
 /* ── 計算方法列表 ── */
 const methodList = $('methodList');
