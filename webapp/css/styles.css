@@ -152,7 +152,10 @@ img,svg{display:block;max-width:100%}
 .result{border-color:var(--line-2)}
 .result .r-head{padding:18px 16px 12px}
 .result .r-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);letter-spacing:.08em}
-.result .r-main{display:flex;align-items:baseline;gap:10px;margin-top:10px}
+.result .r-main{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.r-mer-btn{margin-left:auto;width:auto;padding:8px 10px;gap:6px;font-size:12.5px}
+.r-mer-btn .caret{margin-left:0}
+.r-mer-btn #meridianLabel{max-width:128px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .result .r-point{font-family:"Noto Serif SC",serif;font-size:34px;font-weight:700;letter-spacing:.04em;
   text-shadow:0 0 24px rgba(214,84,60,.22)}
 .result .r-mer{font-size:14px;color:var(--dim)}

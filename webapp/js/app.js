@@ -506,8 +506,8 @@ async function calculate(input, { save = true } = {}) {
 function liveRecalc() {
   const needMeridian = ['motherchild', 'wumen', 'yuanluo'].includes(state.mode);
   const inline = ['wumen', 'yuanluo'].includes(state.mode);
-  $('fieldCard').hidden = !needMeridian;
-  $('merTriggerRow').hidden = inline;
+  $('fieldCard').hidden = true;
+  $('meridianBtn').hidden = !needMeridian;
   $('merPickerC').hidden = !inline;
   $('defRow').hidden = true;
   calculate(currentInput(), { save: false });
