@@ -455,7 +455,7 @@ function renderDefCards(res, rule) {
 }
 
 /* ── 結果渲染 ── */
-function renderResult(res, rule) {
+function renderResult(res, rule, animate = false) {
   const card = $('resultCard');
   state.lastResult = { res, rule };
   $('resultTag').textContent = I18N.t(`計算結果 · ${rule.name}`);
@@ -550,6 +550,13 @@ function renderResult(res, rule) {
   if (tog) tog.firstChild.textContent = I18N.t('展開推演依據');
   card.hidden = false;
   card.classList.remove('open');
+  if (animate) {
+    card.classList.remove('enter');
+    void card.offsetWidth;
+    card.classList.add('enter');
+    clearTimeout(card._entT);
+    card._entT = setTimeout(() => card.classList.remove('enter'), 1500);
+  }
   renderReason();
 }
 
@@ -566,10 +573,10 @@ function currentInput() {
   };
 }
 
-async function calculate(input, { save = true } = {}) {
+async function calculate(input, { save = true, animate = false } = {}) {
   const rule = RULES.find(r => r.id === input.mode) || RULES[0];
   const res = runEngine(input);
-  renderResult(res, rule);
+  renderResult(res, rule, animate);
 
   if (save) {
     const snapshot = {
@@ -604,7 +611,7 @@ function liveRecalc() {
 }
 
 $('calcBtn').onclick = async () => {
-  await calculate(currentInput());
+  await calculate(currentInput(), { animate: true });
   toast(I18N.t('已計算，記錄已保存'));
   $('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 };
