@@ -25,9 +25,12 @@
   --stage-1:#101B16; --stage-2:#060908;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*{scrollbar-width:none}
+*::-webkit-scrollbar{width:0;height:0;display:none}
+*::-webkit-scrollbar-thumb,*::-webkit-scrollbar-track{background:transparent;border:0}
 [hidden]{display:none!important}
-html,body{height:100%}
-body{background:var(--canvas);color:var(--ink);overflow:hidden;
+html,body{height:100%;overflow:hidden}
+body{background:var(--canvas);color:var(--ink);
   font-family:-apple-system,"PingFang TC","PingFang SC","Microsoft JhengHei","Microsoft YaHei",system-ui,sans-serif}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;min-height:24px}
 img,svg{display:block;max-width:100%}
@@ -61,7 +64,8 @@ img,svg{display:block;max-width:100%}
 
 #flow{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
   padding:calc(env(safe-area-inset-top) + 92px) 20px calc(var(--tab) + env(safe-area-inset-bottom) + 22px)}
-#flow::-webkit-scrollbar{display:none}
+#flow::-webkit-scrollbar{width:0;height:0;display:none}
+#flow::-webkit-scrollbar-thumb,#flow::-webkit-scrollbar-track{background:transparent;border:0}
 .panel[hidden]{display:none}
 
 .sec-label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);letter-spacing:.08em;
