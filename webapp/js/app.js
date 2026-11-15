@@ -71,13 +71,6 @@ function shortMer(name) {
   return name.replace(/^(手|足)(太陰|陽明|厥陰|少陽|少陰|太陽)/, '');
 }
 
-/* ── 狀態列時間 ── */
-function clock() {
-  const d = new Date();
-  $('statusTime').textContent = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-clock(); setInterval(clock, 10000);
-
 /* ── 規則 chip ── */
 const ruleRail = $('ruleRail');
 function buildRuleRail() {
