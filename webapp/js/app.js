@@ -757,9 +757,33 @@ localeBtn.onclick = () => {
   rerenderAll();
 };
 
+/* ── 直橫模式手動切換（偏好存本機；auto 時依寬度回應式判斷） ── */
+const layoutBtn = $('layoutBtn');
+function readLayoutPref() { try { return localStorage.getItem('wushu-layout'); } catch (e) { return null; } }
+function effLayout() {
+  const pref = readLayoutPref();
+  if (pref === 'portrait' || pref === 'landscape') return pref;
+  return matchMedia('(min-width:720px)').matches ? 'landscape' : 'portrait';
+}
+function applyLayout() {
+  const pref = readLayoutPref();
+  document.body.classList.remove('force-portrait', 'force-landscape');
+  if (pref === 'portrait') document.body.classList.add('force-portrait');
+  if (pref === 'landscape') document.body.classList.add('force-landscape');
+  const eff = effLayout();
+  layoutBtn.textContent = I18N.t(eff === 'landscape' ? '橫' : '直');
+  layoutBtn.classList.toggle('on', pref === 'portrait' || pref === 'landscape');
+}
+layoutBtn.onclick = () => {
+  const next = effLayout() === 'landscape' ? 'portrait' : 'landscape';
+  try { localStorage.setItem('wushu-layout', next); } catch (e) {}
+  applyLayout();
+};
+
 /* ── 啟動 ── */
 (async () => {
   await History.init();
+  applyLayout();
   applyStatic();
   syncControls();
   await renderHistory();
