@@ -320,6 +320,38 @@ document.addEventListener('click', e => {
   if (tog) tog.firstChild.textContent = card.classList.contains('open') ? I18N.t('收起推演依據') : I18N.t('展開推演依據');
 });
 
+/* 母子補瀉：虛實三選項並列於結果最上方 */
+function renderDefCards(res, rule) {
+  const box = $('defCards');
+  if (rule.id !== 'motherchild') { box.hidden = true; return; }
+  box.hidden = false;
+  const fmt = p => p ? `${p.name}（${p.category}·${EL[p.element].name}）` : '—';
+  const opts = [
+    { def: '虛證', act: '補母', pt: res.motherPt },
+    { def: '實證', act: '瀉子', pt: res.childPt },
+    { def: '未指定', act: '母子並列', both: [res.motherPt, res.childPt] }
+  ];
+  box.innerHTML = opts.map(o => {
+    const active = state.def === o.def;
+    const ptText = o.both
+      ? o.both.filter(Boolean).map(x => x.name).join('＋')
+      : (o.pt ? o.pt.name : '—');
+    const actText = o.both ? '母穴＋子穴並列' : `${o.act} · ${o.pt ? o.pt.category + '穴' : ''}`;
+    return `<button class="def-card${active ? ' on' : ''}" data-def="${o.def}">
+      <div class="dc-title">${I18N.t(o.def)}</div>
+      <div class="dc-act">${I18N.t(actText)}</div>
+      <div class="dc-pt">${I18N.t(ptText)}</div>
+    </button>`;
+  }).join('');
+  box.querySelectorAll('.def-card').forEach(c => {
+    c.onclick = () => {
+      state.def = c.dataset.def;
+      $('defGroup').querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.def === state.def));
+      liveRecalc();
+    };
+  });
+}
+
 /* ── 結果渲染 ── */
 function renderResult(res, rule) {
   const card = $('resultCard');
@@ -328,6 +360,8 @@ function renderResult(res, rule) {
   $('resultPoint').textContent = I18N.t(res.point);
   $('resultMer').textContent = I18N.t(res.mer);
   $('resultSub').textContent = I18N.t(res.sub);
+
+  renderDefCards(res, rule);
 
   const elTag = $('resultElTag');
   if (res.element) {
@@ -461,7 +495,7 @@ function liveRecalc() {
   $('fieldCard').hidden = !needMeridian;
   $('merTriggerRow').hidden = inline;
   $('merPickerC').hidden = !inline;
-  $('defGroup').hidden = state.mode !== 'motherchild';
+  $('defRow').hidden = true;
   calculate(currentInput(), { save: false });
 }
 

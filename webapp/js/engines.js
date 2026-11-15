@@ -107,6 +107,7 @@ function motherChild(rule, input) {
       { label: '本穴', pt: benPt },
       { label: '原穴', pt: yuanPt(m) }
     ],
+    motherPt, childPt,
     shu: shuList(m),
     steps,
     meta: [
