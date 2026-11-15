@@ -1,5 +1,11 @@
 /* 應用層：頁面切換、計算流程、穴庫渲染、歷史記錄 */
 
+/* 由時辰標籤取 2 小時區間，如 07:00–09:00 → 07–09 */
+function shichenRange(label) {
+  const m = (label || '').match(/(\d+):00–(\d+):00/);
+  return m ? `${Number(m[1])}–${Number(m[2])}` : '—';
+}
+
 /* 由目前鐘點推對應時辰（子時 23:00 起） */
 function currentShichen() {
   const h = new Date().getHours();
@@ -54,6 +60,7 @@ function refreshDial() {
   $('metaShichen').textContent = I18N.t(`時辰 ${c.shichen}`);
   $('metaWeek').textContent = I18N.t(`第${isoWeek(new Date(c.date))}週`);
   $('sideTimeGZ').textContent = I18N.t(c.timeGZ);
+  $('sideRange').textContent = I18N.t(shichenRange(state.shichen));
   const idx = SHICHEN.findIndex(s => s[0] === c.shichen[0]);
   ringItems.forEach((g, k) => g.classList.toggle('on', k === idx));
   $('dialArc').setAttribute('transform', `rotate(${-90 + idx * 30} 100 100)`);
@@ -181,7 +188,7 @@ const ringItems = [];
     const branch = label[0];
     const mer = MERIDIANS.find(m => m.id === NAZU_FLOW[branch]);
     const short = shortMer(mer.name).replace(/經$/, '');
-    const hour = String(parseInt((label.match(/(\d+):/) || [])[1], 10));
+    const hour = shichenRange(label);
     const ang = (-90 + i * 30) * Math.PI / 180;
     const xH = 100 + Math.cos(ang) * R_HOUR, yH = 100 + Math.sin(ang) * R_HOUR;
     const xM = 100 + Math.cos(ang) * R_MER, yM = 100 + Math.sin(ang) * R_MER;
