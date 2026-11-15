@@ -106,11 +106,15 @@ $('defGroup').querySelectorAll('.chip').forEach(c => {
   };
 });
 
+/* 依古典流注順序排列十二經 */
+const merSorted = () => [...MERIDIANS].sort(
+  (a, b) => MERIDIAN_ORDER.indexOf(a.id) - MERIDIAN_ORDER.indexOf(b.id));
+
 /* ── 下拉選單 ── */
 const meridianSelect = $('meridianSelect');
 function buildMeridianOptions() {
   meridianSelect.innerHTML = '';
-  MERIDIANS.forEach(m => {
+  merSorted().forEach(m => {
     const o = document.createElement('option');
     o.value = m.name;
     o.textContent = I18N.t(m.name);
@@ -130,7 +134,7 @@ const merPickerCols = $('merPickerCols');
 function buildMeridianPickerC() {
   merPickerCols.innerHTML = '';
   const cols = { yin: [], yang: [] };
-  MERIDIANS.forEach(m => cols[m.polar].push(m));
+  merSorted().forEach(m => cols[m.polar].push(m));
   ['yin', 'yang'].forEach(pol => {
     const col = document.createElement('div');
     col.className = 'mer-c-col';
@@ -262,7 +266,7 @@ function renderReason() {
 const merList = $('merList');
 function buildMerList() {
   merList.innerHTML = '';
-  MERIDIANS.forEach(m => {
+  merSorted().forEach(m => {
     const el = EL[m.element];
     const elOrder = PT_EL[m.polar];
     /* 排穴次序：井 → 滎 → 輸 → 原 → 經 → 合；原穴五行同俞穴 */

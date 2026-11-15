@@ -64,6 +64,10 @@ const MERIDIANS = [
     desc: '膀胱經起目內眥，挾脊抵腰，循腿後外側至足小趾；合穴委中在膕橫紋。' }
 ];
 
+/* 十二經排列順序（古典流注：肺大腸胃脾心小腸膀胱腎心包三焦膽肝） */
+const MERIDIAN_ORDER = ['lung','largeintestine','stomach','spleen','heart','smallintestine',
+  'bladder','kidney','pericardium','sanjiao','gallbladder','liver'];
+
 /* 納子流注次序：子膽丑肝寅肺卯大腸辰胃巳脾午心未小腸申膀胱酉腎戌心包亥三焦 */
 const NAZU_FLOW = {
   '子': 'gallbladder', '丑': 'liver',   '寅': 'lung',          '卯': 'largeintestine',
