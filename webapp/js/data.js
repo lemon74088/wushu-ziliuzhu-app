@@ -94,6 +94,28 @@ const YUAN_POINTS = {
   gallbladder: '丘墟', bladder: '京骨'
 };
 
+/* 十二經絡穴（十五絡之經脈十二絡；任督脾大絡另列 LUO_EXTRA） */
+const LUO_POINTS = {
+  lung: '列缺', pericardium: '內關', heart: '通里', spleen: '公孫', liver: '蠡溝', kidney: '大鐘',
+  largeintestine: '偏歷', sanjiao: '外關', smallintestine: '支正', stomach: '豐隆',
+  gallbladder: '光明', bladder: '飛揚'
+};
+const LUO_EXTRA = [
+  { name: '任脈', point: '鳩尾（一名尾翳）', note: '散於腹' },
+  { name: '督脈', point: '長強', note: '挾脊上項，散於頭上' },
+  { name: '脾之大絡', point: '大包', note: '布於胸脅' }
+];
+
+/* 表裡經配對（六對，互為表裡；原絡配穴客經取此經絡穴） */
+const TABLELI = {
+  lung: 'largeintestine', largeintestine: 'lung',
+  spleen: 'stomach',     stomach: 'spleen',
+  heart: 'smallintestine', smallintestine: 'heart',
+  kidney: 'bladder',     bladder: 'kidney',
+  pericardium: 'sanjiao', sanjiao: 'pericardium',
+  liver: 'gallbladder',  gallbladder: 'liver'
+};
+
 /* 納甲十日開穴表（徐氏定穴歌）：branch 時辰；cat 井/滎/俞/經/合/重見；yuan 俞穴兼過原穴；yuan2 兼過三焦/心包原穴 */
 const NAJIA_TABLE = {
   '甲': [
@@ -188,11 +210,13 @@ const RULES = [
     desc: '依時辰推當令經脈與五輸穴' },
   { id: 'wumen',       name: '五門十變', engine: 'ENG-08/09/10', available: true, version: 'WMT-v0.1',
     desc: '化合並取兩經本穴、互合借氣調經，同一病經並列對照卡' },
+  { id: 'yuanluo',     name: '原絡配穴', engine: 'ENG-12', available: true, version: 'YUANLUO-v0.1',
+    desc: '先病經取原穴為主，表裡後病經取絡穴為客，主客原絡相配' },
   { id: 'merge',       name: '綜合計算', engine: 'ENG-11', available: false, version: 'MERGE-v0.0',
     desc: '多方法對照與結果比較' }
 ];
 
-const DATA_VERSION = 'DATA-v1.0';
+const DATA_VERSION = 'DATA-v1.1';
 
 function meridianByName(name) {
   return MERIDIANS.find(m => m.name === name) || null;

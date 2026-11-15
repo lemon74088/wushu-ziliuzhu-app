@@ -275,14 +275,39 @@ function buildMerList() {
           <tbody>${m.pts.map((p, i) => {
             const pe = EL[elOrder[i]];
             return `<tr><td>${I18N.t(p[0])}</td><td>${I18N.t(p[1])}</td><td><span style="color:${pe.color}">${I18N.t(pe.name)}</span></td></tr>`;
-          }).join('')}</tbody>
+          }).join('')}
+            <tr><td>${I18N.t('原穴')}</td><td>${YUAN_POINTS[m.id]}</td><td><span style="color:${EL[m.element].color}">${I18N.t(EL[m.element].name)}</span></td></tr>
+            <tr><td>${I18N.t('絡穴')}</td><td>${LUO_POINTS[m.id]}</td><td>${I18N.t('表裡')} · ${I18N.t(shortMer(MERIDIANS.find(x => x.id === TABLELI[m.id]).name))}</td></tr>
+          </tbody>
         </table>
         <p class="point-desc">${I18N.t(m.desc)}</p>
       </div></div>`;
     merList.appendChild(card);
   });
 }
+/* 十五絡之任脈、督脈、脾之大絡（不繫表裡，分部軀幹） */
+function buildLuoExtra() {
+  const box = $('luoExtra');
+  if (!box) return;
+  box.innerHTML = `
+    <article class="card mer">
+      <div class="m-row">
+        <div class="m-name">
+          <div class="nm">${I18N.t('其他絡穴')}</div>
+          <div class="yy">${I18N.t('任脈 · 督脈 · 脾之大絡，不繫表裡')}</div>
+        </div>
+      </div>
+      <div class="more"><div class="more-inner">
+        <table class="point-table">
+          <thead><tr><th>${I18N.t('絡脈')}</th><th>${I18N.t('絡穴')}</th><th>${I18N.t('分部')}</th></tr></thead>
+          <tbody>${LUO_EXTRA.map(x =>
+            `<tr><td>${I18N.t(x.name)}</td><td>${I18N.t(x.point)}</td><td>${I18N.t(x.note)}</td></tr>`).join('')}</tbody>
+        </table>
+      </div></div>
+    </article>`;
+}
 buildMerList();
+buildLuoExtra();
 
 /* ── 卡片展開 ── */
 document.addEventListener('click', e => {
@@ -431,11 +456,11 @@ async function calculate(input, { save = true } = {}) {
 
 /* 條件變更即時重算（不寫入歷史） */
 function liveRecalc() {
-  const needMeridian = ['motherchild', 'wumen'].includes(state.mode);
-  const isWumen = state.mode === 'wumen';
+  const needMeridian = ['motherchild', 'wumen', 'yuanluo'].includes(state.mode);
+  const inline = ['wumen', 'yuanluo'].includes(state.mode);
   $('fieldCard').hidden = !needMeridian;
-  $('merTriggerRow').hidden = isWumen;
-  $('merPickerC').hidden = !isWumen;
+  $('merTriggerRow').hidden = inline;
+  $('merPickerC').hidden = !inline;
   $('defGroup').hidden = state.mode !== 'motherchild';
   calculate(currentInput(), { save: false });
 }

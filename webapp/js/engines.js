@@ -6,6 +6,7 @@ function runEngine(input) {
   if (rule.id === 'nazu') return nazu(rule, input);
   if (rule.id === 'najia') return najia(rule, input);
   if (rule.id === 'wumen') return wumen(rule, input);
+  if (rule.id === 'yuanluo') return yuanluo(rule, input);
   if (input.mode === 'huhe') return huhe(rule, input);
   if (input.mode === 'huahua') return huahua(rule, input);
   return motherChild(rule, input);
@@ -271,6 +272,50 @@ function wumen(rule, input) {
       { label: '規則已對教材', kind: 'ok' }
     ],
     warnings: ['五門十變為合化關係參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
+  };
+}
+
+/* ENG-12 原絡配穴：先病經為主取本經原穴，表裡後病經為客取其絡穴 */
+function yuanluo(rule, input) {
+  const m = meridianByName(input.meridian);
+  if (!m) return { status: 'error', point: '經脈找不到', mer: '', sub: '病經資料比對失敗。', steps: [], meta: [], warnings: [] };
+  const otherId = TABLELI[m.id];
+  const otherM = MERIDIANS.find(x => x.id === otherId);
+  if (!otherM) return { status: 'error', point: '表裡經找不到', mer: '', sub: '此經表裡配對資料缺失。', steps: [], meta: [], warnings: [] };
+
+  const yuanName = YUAN_POINTS[m.id];
+  const luoName = LUO_POINTS[otherM.id];
+  const yuanPt = { category: '原穴', name: yuanName, element: m.element };
+  const luoPt = { category: '絡穴', name: luoName, element: otherM.element };
+
+  const steps = [
+    `先病之經為主：${m.name}，取本經原穴${yuanName}為主穴。`,
+    `表裡經${otherM.name}後病為客，取其絡穴${luoName}為客穴。`,
+    '一原一絡、主客分明；不可兩原並取、兩絡齊下。',
+    '原絡定表裡，五輸定虛實，時日定先後；可與母子補瀉、納子納甲合參。'
+  ];
+
+  return {
+    status: 'ok',
+    point: `${yuanName}＋${luoName}`,
+    mer: `${m.name}主 · ${otherM.name}客`,
+    sub: `${m.name}先病為主，取原穴${yuanName}；表裡${otherM.name}後病為客，取絡穴${luoName}；主客次序一倒，取穴即反。`,
+    element: m.element,
+    merId: m.id,
+    info: [
+      { label: '主穴 · 原穴', pt: yuanPt },
+      { label: '客穴 · 絡穴', pt: luoPt },
+      { label: '表裡經', pt: null, value: otherM.name }
+    ],
+    shu: shuList(m),
+    steps,
+    meta: [
+      { label: `引擎 ${rule.engine}`, kind: '' },
+      { label: `規則版本 ${rule.version}`, kind: '' },
+      { label: `資料 ${DATA_VERSION}`, kind: '' },
+      { label: '規則已對教材', kind: 'ok' }
+    ],
+    warnings: ['原絡配穴為表裡取穴參考，不直接等同選穴處方；上線前須醫師覆核典籍出處。']
   };
 }
 
