@@ -215,6 +215,36 @@ const ringItems = [];
     };
     ring.appendChild(g); ringItems.push(g);
   });
+
+  /* 手指／滑鼠拖轉：按環面繞圈滑動，依角度切換最近時辰格 */
+  const dialSvg = ring.parentNode;
+  let dragging = false, dragIdx = -1;
+  function angleIndex(pt) {
+    const r = dialSvg.getBoundingClientRect();
+    const dx = pt.clientX - (r.left + r.width / 2);
+    const dy = pt.clientY - (r.top + r.height / 2);
+    const deg = Math.atan2(dy, dx) * 180 / Math.PI;
+    return ((Math.round((deg + 90) / 30) % 12) + 12) % 12;
+  }
+  function applyShichen(i) {
+    state.shichen = SHICHEN[i];
+    syncControls();
+    refreshDial();
+    liveRecalc();
+  }
+  dialSvg.addEventListener('pointerdown', e => {
+    dragging = true;
+    dragIdx = SHICHEN.findIndex(s => s === state.shichen);
+    dialSvg.setPointerCapture(e.pointerId);
+  });
+  dialSvg.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const i = angleIndex(e);
+    if (i !== dragIdx) { dragIdx = i; applyShichen(i); }
+  });
+  const endDrag = () => { dragging = false; dragIdx = -1; };
+  dialSvg.addEventListener('pointerup', endDrag);
+  dialSvg.addEventListener('pointercancel', endDrag);
 })();
 
 /* ── 計算方法列表 ── */

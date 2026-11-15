@@ -87,7 +87,7 @@ img,svg{display:block;max-width:100%}
 /* 圓盤卡 */
 .hero{padding:20px 18px 16px;cursor:pointer}
 .dial{position:relative;width:150px;height:150px;flex:none;margin:0}
-.dial svg{width:100%;height:100%}
+.dial svg{width:100%;height:100%;touch-action:none}
 .dial-core{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;pointer-events:none}
 .dial-core .shichen{font-family:"Noto Serif SC",serif;font-size:26px;font-weight:700;letter-spacing:.12em;
   text-shadow:0 0 18px rgba(214,84,60,.28)}
