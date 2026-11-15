@@ -327,9 +327,11 @@ input[type=date],select{background:var(--surface-2);border:1px solid var(--line)
 
 .tabbar button{font-size:10.5px}
 
-/* ══ 橫版寬螢幕（桌面／平板直橫）══ */
-@media(min-width:900px){
-  #app{width:min(1080px,96vw);height:min(720px,92vh)}
+/* ══ 橫版寬螢幕（平板直橫／桌面）══ */
+@media(min-width:720px){
+  #app{width:min(1080px,96vw);height:min(720px,92vh);border-radius:var(--r-shell);
+    box-shadow:0 0 0 11px var(--frame),0 0 0 13px var(--frame-2),0 44px 100px rgba(0,0,0,.42)}
+  .notch{display:none}
   .panel[data-panel="home"]{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}
   #dateCard{grid-column:1/-1}
   #dialCard{grid-column:1;grid-row:2}
