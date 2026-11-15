@@ -779,6 +779,13 @@ layoutBtn.onclick = () => {
   applyLayout();
 };
 
+/* 自動模式：視窗縮放／裝置旋轉跨過 720px 時即時重偵測；手動鎖定後不跟隨 */
+const layoutMq = matchMedia('(min-width:720px)');
+function onLayoutMq() { if (!readLayoutPref()) applyLayout(); }
+if (layoutMq.addEventListener) layoutMq.addEventListener('change', onLayoutMq);
+else layoutMq.addListener(onLayoutMq);
+window.addEventListener('orientationchange', onLayoutMq);
+
 /* ── 啟動 ── */
 (async () => {
   await History.init();
