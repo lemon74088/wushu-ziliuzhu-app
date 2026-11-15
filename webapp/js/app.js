@@ -236,6 +236,7 @@ function buildMethodList() {
       <div class="m-body">
         <div class="m-name">${I18N.t(r.name)}</div>
         <div class="m-desc">${I18N.t(r.desc)}</div>
+        ${r.use ? `<div class="m-use">${I18N.t(r.use)}</div>` : ''}
         <div class="m-axis"><span class="axis-tag">${I18N.t(r.axis)}</span><span class="m-basis">${I18N.t(`${r.basis}｜${r.time}`)}</span></div>
       </div>
       <span class="badge ${r.available ? 'ok' : 'warn'} m-badge">${r.available ? I18N.t('已實作') : I18N.t('待研究')}</span>`;
@@ -438,6 +439,9 @@ function renderResult(res, rule) {
   $('resultPoint').textContent = I18N.t(res.point);
   $('resultMer').textContent = I18N.t(res.mer);
   $('resultSub').textContent = I18N.t(res.sub);
+  const useEl = $('resultUse');
+  if (rule.use) { useEl.hidden = false; useEl.textContent = I18N.t(rule.use); }
+  else useEl.hidden = true;
 
   renderDefCards(res, rule);
 

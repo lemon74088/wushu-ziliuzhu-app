@@ -169,6 +169,7 @@ img,svg{display:block;max-width:100%}
   background:var(--surface-2);color:var(--ink)}
 .el-tag .dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 8px currentColor}
 .result .r-sub{font-size:13px;color:var(--dim);margin-top:8px;line-height:1.6}
+.result .r-use{font-size:12.5px;color:var(--ink);opacity:.82;margin-top:6px;line-height:1.6;border-left:2px solid var(--key);padding-left:10px}
 .r-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--key);padding:0 16px 14px}
 .r-toggle .caret{transition:transform .3s var(--ease)}
 .card.open .r-toggle .caret{transform:rotate(180deg)}
@@ -320,6 +321,7 @@ input[type=date],select{background:var(--surface-2);border:1px solid var(--line)
 .method-row .m-body{flex:1;min-width:0}
 .method-row .m-name{font-size:14.5px;font-weight:600}
 .method-row .m-desc{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.5}
+.method-row .m-use{font-size:11.5px;color:var(--ink);opacity:.85;margin-top:4px;line-height:1.5}
 .method-row .m-badge{flex:0 0 auto}
 .method-row.todo{opacity:.7}
 .m-axis{display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:wrap}

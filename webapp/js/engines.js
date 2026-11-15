@@ -88,7 +88,7 @@ function motherChild(rule, input) {
     `五行相生：${EL[motherEl].name}生${EL[el].name}，${EL[el].name}生${EL[childEl].name}。`,
     input.def === '未指定'
       ? '虛實未指定，母穴與子穴一併列出，待確認虛實後再定補瀉。'
-      : `依「虛則補其母、實則瀉其子」，本案${input.def}，宜${direction}。`,
+      : `依《難經·六十九難》「虛者補其母，實者瀉其子」，本案${input.def}，宜${direction}。`,
     `本經母穴：${fmt(motherPt)}；本經子穴：${fmt(childPt)}。`,
     `參考母經／子經：${targetMers.join('、')}。`
   ];
