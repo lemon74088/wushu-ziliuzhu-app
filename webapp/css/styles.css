@@ -110,6 +110,11 @@ img,svg{display:block;max-width:100%}
 .ring-mer{fill:var(--dim);font-size:9px;font-weight:600}
 .ring-item.on .ring-hour{fill:var(--key-ink)}
 .ring-item.on .ring-mer{fill:var(--key-ink)}
+.ring-item{cursor:pointer}
+.ring-hit{fill:transparent;pointer-events:all}
+.ring-item:hover .ring-hit{fill:rgba(255,255,255,.06)}
+.ring-item.on .ring-hit{fill:rgba(214,84,60,.14)}
+.ring-item:active .ring-hit{fill:rgba(214,84,60,.22)}
 .date-meta{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin-top:10px;font-size:12.5px;color:var(--dim)}
 .date-meta b{color:var(--ink);font-weight:600}
 
