@@ -327,4 +327,22 @@ input[type=date],select{background:var(--surface-2);border:1px solid var(--line)
 
 .tabbar button{font-size:10.5px}
 
+/* ══ 橫版寬螢幕（桌面／平板直橫）══ */
+@media(min-width:900px){
+  #app{width:min(1080px,96vw);height:min(720px,92vh)}
+  .panel[data-panel="home"]{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}
+  #dateCard{grid-column:1/-1}
+  #dialCard{grid-column:1;grid-row:2}
+  #resultCard{grid-column:2;grid-row:2 / span 2}
+  .panel[data-panel="home"] .sec-label{grid-column:1;grid-row:3;margin:18px 2px 10px}
+  #ruleRail{grid-column:1;grid-row:4}
+  .quick{grid-column:1/-1}
+  .cta{grid-column:1/-1}
+  .dial-card .dial{width:196px;height:196px}
+  .dial-card .dial-core .shichen{font-size:24px}
+  #merList{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+  #methodList{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+  #histList{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+}
+
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
