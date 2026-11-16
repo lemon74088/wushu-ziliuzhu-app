@@ -63,7 +63,7 @@ img,svg{display:block;max-width:100%}
 .ic.sm{width:15px;height:15px}
 
 #flow{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
-  padding:calc(env(safe-area-inset-top) + 92px) 20px calc(var(--tab) + env(safe-area-inset-bottom) + 22px)}
+  padding:calc(env(safe-area-inset-top) + 118px) 20px calc(var(--tab) + env(safe-area-inset-bottom) + 22px)}
 #flow::-webkit-scrollbar{width:0;height:0;display:none}
 #flow::-webkit-scrollbar-thumb,#flow::-webkit-scrollbar-track{background:transparent;border:0}
 .panel[hidden]{display:none}
