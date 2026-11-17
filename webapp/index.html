@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <meta name="theme-color" content="#0B120F">
 <title>五腧穴·子午流注計算</title>
-<link rel="stylesheet" href="css/styles.css?v=20261116a">
+<link rel="stylesheet" href="css/styles.css?v=20261117a">
 </head>
 <body>
 <div class="stage"><div id="app">
@@ -125,12 +125,34 @@
           <div class="mer-c-cols" id="merPickerCols"></div>
         </div>
         <div class="def-cards" id="defCards" hidden></div>
-        <div class="info-grid" id="infoGrid"></div>
-        <div class="compare" id="compareCards" hidden></div>
-        <div class="shu-block">
-          <div class="shu-title" data-i18n="循經取穴（五輸穴）">循經取穴（五輸穴）</div>
-          <div class="shu-grid" id="shuGrid"></div>
+
+        <div class="acc" id="accInfo">
+          <button class="acc-head" type="button">
+            <span class="acc-ic">☰</span>
+            <span class="acc-title" data-i18n="資訊明細（經脈／五行對照）">資訊明細（經脈／五行對照）</span>
+            <span class="acc-caret" data-i18n="展開">展開</span>
+          </button>
+          <div class="acc-body"><div class="info-grid" id="infoGrid"></div></div>
         </div>
+
+        <div class="acc" id="accShu">
+          <button class="acc-head" type="button">
+            <span class="acc-ic">✦</span>
+            <span class="acc-title" data-i18n="循經取穴 · 五輸穴網格">循經取穴 · 五輸穴網格</span>
+            <span class="acc-caret" data-i18n="展開">展開</span>
+          </button>
+          <div class="acc-body"><div class="shu-grid" id="shuGrid"></div></div>
+        </div>
+
+        <div class="acc" id="accCompare">
+          <button class="acc-head" type="button">
+            <span class="acc-ic">⇄</span>
+            <span class="acc-title" data-i18n="多法對照（化合／互合／自合）">多法對照（化合／互合／自合）</span>
+            <span class="acc-caret" data-i18n="展開">展開</span>
+          </button>
+          <div class="acc-body"><div class="compare" id="compareCards" hidden></div></div>
+        </div>
+
         <button class="r-toggle" data-expand data-i18n="展開推演依據">
           展開推演依據
           <svg class="ic sm caret" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
@@ -249,12 +271,12 @@
   </div>
 </div></div>
 
-<script src="vendor/lunar/lunar.js?v=20261116a"></script>
-<script src="js/i18n.js?v=20261116a"></script>
-<script src="js/data.js?v=20261116a"></script>
-<script src="js/calendar.js?v=20261116a"></script>
-<script src="js/engines.js?v=20261116a"></script>
-<script src="js/history.js?v=20261116a"></script>
-<script src="js/app.js?v=20261116a"></script>
+<script src="vendor/lunar/lunar.js?v=20261117a"></script>
+<script src="js/i18n.js?v=20261117a"></script>
+<script src="js/data.js?v=20261117a"></script>
+<script src="js/calendar.js?v=20261117a"></script>
+<script src="js/engines.js?v=20261117a"></script>
+<script src="js/history.js?v=20261117a"></script>
+<script src="js/app.js?v=20261117a"></script>
 </body>
 </html>

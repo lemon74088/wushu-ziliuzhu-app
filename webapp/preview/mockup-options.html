@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>版面優化示意稿</title>
+<style>
+:root{
+  --canvas:#0B120F; --surface:rgba(255,255,255,.05); --surface-2:rgba(255,255,255,.09);
+  --ink:#F1EEE6; --dim:rgba(241,238,230,.62); --faint:rgba(241,238,230,.38);
+  --line:rgba(241,238,230,.1); --line-2:rgba(241,238,230,.16);
+  --key:#D6543C; --key-soft:rgba(214,84,60,.16); --key-ink:#FBEDE9;
+  --wood:#74B57E; --fire:#D6543C; --earth:#C9A25E; --metal:#D9D4C5; --water:#5E8AAE;
+  --r-card:18px; --r-control:10px; --r-pill:999px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(130% 90% at 50% 8%,#101B16,#060908 72%);color:var(--ink);
+  font-family:-apple-system,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;min-height:100vh;padding:36px 28px}
+.sheet{display:flex;gap:28px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.col{width:360px}
+.col h2{font-family:"Noto Serif SC",serif;font-size:18px;margin-bottom:4px}
+.col .sub{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:14px}
+.phone{height:720px;border-radius:30px;background:var(--canvas);border:1px solid var(--line-2);
+  box-shadow:0 0 0 11px #161E1A,0 0 0 13px #2A352F,0 44px 100px rgba(0,0,0,.42);overflow:hidden;position:relative;display:flex;flex-direction:column}
+.p-top{padding:18px 18px 10px;display:flex;align-items:center;gap:10px}
+.p-top .ttl{font-family:"Noto Serif SC",serif;font-size:16px;font-weight:700;flex:1}
+.p-body{flex:1;padding:6px 16px 16px;overflow:hidden}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:.1em;color:var(--faint)}
+/* A1 */
+.search{display:flex;align-items:center;gap:9px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-pill);padding:11px 14px;margin-bottom:12px;color:var(--faint);font-size:13px}
+.search svg{width:15px;height:15px;flex:none}
+.filters{display:flex;gap:7px;overflow:hidden;margin-bottom:14px}
+.chip{flex:none;padding:7px 12px;border-radius:var(--r-pill);background:var(--surface);border:1px solid var(--line);
+  font-size:12px;color:var(--dim)}
+.chip.on{background:var(--key-soft);border-color:var(--key);color:var(--key-ink);font-weight:600}
+.mrow{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-card);margin-bottom:10px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 10px currentColor}
+.mrow .nm{flex:1;min-width:0}
+.mrow .nm b{display:block;font-size:14px;font-weight:600}
+.mrow .nm span{font-size:11px;color:var(--dim);margin-top:2px}
+.mrow .yuan{font-size:11.5px;color:var(--faint);text-align:right}
+.mrow .yuan b{display:block;font-size:13px;color:var(--ink);font-weight:500;margin-top:2px}
+.hint{margin-top:12px;font-size:11.5px;color:var(--key-ink);background:var(--key-soft);border-left:3px solid var(--key);
+  border-radius:0 var(--r-control) var(--r-control) 0;padding:10px 12px;line-height:1.6}
+/* A2 grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:13px 12px}
+.gcard .gh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.gcard .gh b{font-size:13.5px}
+.gcard .g-yuan{font-size:11px;color:var(--dim)}
+.gcard .g-yuan b{color:var(--ink);font-weight:500}
+.gcard .gel{margin-left:auto;font-size:10px;color:var(--faint)}
+/* B2 */
+.res{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-card);padding:18px 16px;margin-bottom:12px}
+.res .r-tag{font-size:11px;color:var(--dim);letter-spacing:.08em}
+.res .r-main{display:flex;align-items:baseline;gap:10px;margin-top:10px;flex-wrap:wrap}
+.res .r-open{font-size:13px;color:var(--dim)}
+.res .r-point{font-family:"Noto Serif SC",serif;font-size:26px;font-weight:700}
+.res .r-mer{font-size:13px;color:var(--dim);margin-top:8px}
+.res .r-sub{font-size:12px;color:var(--faint);line-height:1.7;margin-top:8px}
+.acc{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px dashed var(--line-2);
+  border-radius:var(--r-card);padding:13px 14px;margin-bottom:10px;color:var(--dim);font-size:13px}
+.acc .caret{margin-left:auto;color:var(--faint)}
+.acc .ic{width:18px;height:18px;opacity:.7}
+.cta{margin-top:14px;background:var(--key);color:#fff;border-radius:var(--r-control);padding:14px;text-align:center;
+  font-weight:600;font-size:14px}
+.tabbar{position:absolute;left:0;right:0;bottom:0;display:flex;background:rgba(11,18,15,.92);border-top:1px solid var(--line);padding:10px 8px 14px}
+.tabbar button{flex:1;background:none;border:0;color:var(--faint);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tabbar button.on{color:var(--key)}
+.tabbar .ti{width:20px;height:20px;border-radius:6px;background:var(--surface-2)}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <!-- A1 -->
+  <div class="col">
+    <h2>方案 A1 · 搜尋＋篩選</h2>
+    <div class="sub">穴庫頂部加搜尋框與陰陽／五行 chip，輸入即過濾，不用逐條滑。</div>
+    <div class="phone">
+      <div class="p-top"><span class="ttl">穴庫</span><span class="tag">十二經脈</span></div>
+      <div class="p-body">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          搜尋經脈／穴名
+        </div>
+        <div class="filters">
+          <span class="chip on">全部</span><span class="chip">陰經</span><span class="chip">陽經</span>
+          <span class="chip">木</span><span class="chip">火</span><span class="chip">土</span><span class="chip">金</span><span class="chip">水</span>
+        </div>
+        <div class="mrow"><span class="dot" style="background:var(--wood);color:var(--wood)"></span>
+          <div class="nm"><b>手太陰肺經</b><span>陰經 · 金</span></div>
+          <div class="yuan">原穴<b>太淵</b></div></div>
+        <div class="mrow"><span class="dot" style="background:var(--metal);color:var(--metal)"></span>
+          <div class="nm"><b>手陽明大腸經</b><span>陽經 · 金</span></div>
+          <div class="yuan">原穴<b>合谷</b></div></div>
+        <div class="mrow"><span class="dot" style="background:var(--earth);color:var(--earth)"></span>
+          <div class="nm"><b>足陽明胃經</b><span>陽經 · 土</span></div>
+          <div class="yuan">原穴<b>衝陽</b></div></div>
+        <div class="mrow"><span class="dot" style="background:var(--earth);color:var(--earth)"></span>
+          <div class="nm"><b>足太陰脾經</b><span>陰經 · 土</span></div>
+          <div class="yuan">原穴<b>太白</b></div></div>
+        <div class="mrow"><span class="dot" style="background:var(--fire);color:var(--fire)"></span>
+          <div class="nm"><b>手少陰心經</b><span>陰經 · 火</span></div>
+          <div class="yuan">原穴<b>神門</b></div></div>
+        <div class="hint">輸入「太白」或「脾」即過濾到目標經；篩選可疊加陰陽／五行。</div>
+      </div>
+      <nav class="tabbar">
+        <button><span class="ti"></span>首頁</button><button><span class="ti"></span>計算</button>
+        <button class="on"><span class="ti"></span>穴庫</button><button><span class="ti"></span>推演</button><button><span class="ti"></span>歷史</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- A2 -->
+  <div class="col">
+    <h2>方案 A2 · 兩欄緊湊卡</h2>
+    <div class="sub">十二經改兩欄小卡，只留經名、原穴、五行；點開再看完整五輸表，列表長度砍半。</div>
+    <div class="phone">
+      <div class="p-top"><span class="ttl">穴庫</span><span class="tag">十二經脈</span></div>
+      <div class="p-body">
+        <div class="grid">
+          <div class="gcard"><div class="gh"><span class="dot" style="background:var(--wood);color:var(--wood)"></span><b>肺經</b><span class="gel">金</span></div>
+            <div class="g-yuan">原穴 <b>太淵</b></div></div>
+          <div class="gcard"><div class="gh"><span class="dot" style="background:var(--metal);color:var(--metal)"></span><b>大腸</b><span class="gel">金</span></div>
+            <div class="g-yuan">原穴 <b>合谷</b></div></div>
+          <div class="gcard"><div class="gh"><span class="dot" style="background:var(--earth);color:var(--earth)"></span><b>胃經</b><span class="gel">土</span></div>
+            <div class="g-yuan">原穴 <b>衝陽</b></div></div>
+          <div class="gcard"><div class="gh"><span class="dot" style="background:var(--earth);color:var(--earth)"></span><b>脾經</b><span class="gel">土</span></div>
+            <div class="g-yuan">原穴 <b>太白</b></div></div>
+          <div class="gcard"><div class="gh"><span class="dot" style="background:var(--fire);color:var(--fire)"></span><b>心經</b><span class="gel">火</span></div>
+            <div class="g-yuan">原穴 <b>神門</b></div></div>
+          <div class="gcard"><div class="gh"><span class="dot" style="background:var(--water);color:var(--water)"></span><b>小腸</b><span class="gel">火</span></div>
+            <div class="g-yuan">原穴 <b>腕骨</b></div></div>
+          <div class="gcard"><div class="gh"><span class="dot" style="background:var(--water);color:var(--water)"></span><b>膀胱</b><span class="gel">水</span></div>
+            <div class="g-yuan">原穴 <b>京骨</b></div></div>
+          <div class="gcard"><div class="gh"><span class="dot" style="background:var(--water);color:var(--water)"></span><b>腎經</b><span class="gel">水</span></div>
+            <div class="g-yuan">原穴 <b>太谿</b></div></div>
+        </div>
+        <div class="hint">卡片預設只顯示摘要；點一張展開該經井滎輸原經合＋絡穴表。</div>
+      </div>
+      <nav class="tabbar">
+        <button><span class="ti"></span>首頁</button><button><span class="ti"></span>計算</button>
+        <button class="on"><span class="ti"></span>穴庫</button><button><span class="ti"></span>推演</button><button><span class="ti"></span>歷史</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- B2 -->
+  <div class="col">
+    <h2>方案 B2 · 結果置頂＋細節收起</h2>
+    <div class="sub">首屏先看到開穴結果；日曆、流注環、資訊明細、五輸網格、多法對照預設折疊，點開再展。</div>
+    <div class="phone">
+      <div class="p-top"><span class="ttl">五腧穴·子午流注</span><span class="tag">即時計算</span></div>
+      <div class="p-body">
+        <div class="res">
+          <div class="r-tag">計算結果 · 納子法</div>
+          <div class="r-main"><span class="r-open">開穴：</span><span class="r-point">太白</span><span class="gel" style="color:var(--earth)">土</span></div>
+          <div class="r-mer">足太陰脾經 · 當令</div>
+          <p class="r-sub">此時（巳時 09:00–11:00）氣血流注足太陰脾經；取穴仍需配合虛實與典籍覆核。</p>
+        </div>
+        <div class="acc"><span class="ic">▦</span>日曆干支 · 流注環<span class="caret">展開 ▾</span></div>
+        <div class="acc"><span class="ic">☰</span>資訊明細（時辰／時干支／經脈）<span class="caret">展開 ▾</span></div>
+        <div class="acc"><span class="ic">✦</span>循經取穴 · 五輸穴網格<span class="caret">展開 ▾</span></div>
+        <div class="acc"><span class="ic">⇄</span>多法對照（化合／互合／自合）<span class="caret">展開 ▾</span></div>
+        <div class="cta">記錄本次結果</div>
+        <div class="hint">打開頁面首屏即取穴；次要區塊不佔首屏高度，需要時再逐項展開。</div>
+      </div>
+      <nav class="tabbar">
+        <button class="on"><span class="ti"></span>首頁</button><button><span class="ti"></span>計算</button>
+        <button><span class="ti"></span>穴庫</button><button><span class="ti"></span>推演</button><button><span class="ti"></span>歷史</button>
+      </nav>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

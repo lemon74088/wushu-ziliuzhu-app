@@ -422,6 +422,16 @@ document.addEventListener('click', e => {
   if (tog) tog.firstChild.textContent = card.classList.contains('open') ? I18N.t('收起推演依據') : I18N.t('展開推演依據');
 });
 
+/* 結果卡內折疊區：明細／五輸／對照 */
+document.addEventListener('click', e => {
+  const head = e.target.closest('.acc-head');
+  if (!head) return;
+  const acc = head.closest('.acc');
+  acc.classList.toggle('open');
+  const caret = acc.querySelector('.acc-caret');
+  if (caret) caret.textContent = I18N.t(acc.classList.contains('open') ? '收起' : '展開');
+});
+
 /* 母子補瀉：虛實三選項並列於結果最上方 */
 function renderDefCards(res, rule) {
   const box = $('defCards');
@@ -536,6 +546,16 @@ function renderResult(res, rule, animate = false) {
       `<div class="sc-name">${I18N.t(p.name)}</div>` +
       `<div class="sc-el" style="color:${e.color}">${I18N.t(e.name)}</div>`;
     sg.appendChild(cell);
+  });
+
+  /* 折疊區預設收起；無內容的區塊整列隱藏 */
+  $('accInfo').hidden = ig.children.length === 0;
+  $('accShu').hidden = sg.children.length === 0;
+  $('accCompare').hidden = cc.hidden;
+  card.querySelectorAll('.acc').forEach(a => {
+    a.classList.remove('open');
+    const caret = a.querySelector('.acc-caret');
+    if (caret) caret.textContent = I18N.t('展開');
   });
 
   $('stepList').innerHTML = res.steps.map((s, i) =>

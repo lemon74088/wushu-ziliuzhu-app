@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>首頁修訂版 · 圓盤保留</title>
+<style>
+:root{
+  --canvas:#0B120F; --surface:rgba(255,255,255,.05); --surface-2:rgba(255,255,255,.09);
+  --ink:#F1EEE6; --dim:rgba(241,238,230,.62); --faint:rgba(241,238,230,.38);
+  --line:rgba(241,238,230,.1); --line-2:rgba(241,238,230,.16);
+  --key:#D6543C; --key-soft:rgba(214,84,60,.16); --key-ink:#FBEDE9;
+  --wood:#74B57E; --fire:#D6543C; --earth:#C9A25E; --metal:#D9D4C5; --water:#5E8AAE;
+  --r-card:18px; --r-control:10px; --r-pill:999px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(130% 90% at 50% 8%,#101B16,#060908 72%);color:var(--ink);
+  font-family:-apple-system,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;padding:32px 20px}
+.sheet{width:390px}
+.sheet h1{font-family:"Noto Serif SC",serif;font-size:18px;margin-bottom:4px}
+.sheet .sub{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:14px}
+.phone{height:880px;border-radius:30px;background:var(--canvas);border:1px solid var(--line-2);
+  box-shadow:0 0 0 11px #161E1A,0 0 0 13px #2A352F,0 44px 100px rgba(0,0,0,.42);overflow:hidden;position:relative;display:flex;flex-direction:column}
+.p-top{padding:18px 18px 10px;display:flex;align-items:center;gap:10px}
+.p-top .ttl{font-family:"Noto Serif SC",serif;font-size:16px;font-weight:700;flex:1}
+.tag{font-size:10.5px;letter-spacing:.1em;color:var(--faint)}
+.p-body{flex:1;padding:4px 16px 16px;overflow:hidden}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);
+  background-image:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.015) 55%);
+  backdrop-filter:blur(14px);margin-bottom:12px}
+.date-strip{padding:12px 14px;display:flex;align-items:center;gap:10px}
+.date-strip .d-main{flex:1}
+.date-strip .d-date{font-family:"Noto Serif SC",serif;font-size:14px;font-weight:600}
+.date-strip .d-lunar{font-size:11px;color:var(--dim);margin-top:2px}
+.date-strip .badge{font-size:10.5px;color:var(--dim);background:var(--surface-2);border-radius:var(--r-pill);padding:5px 10px}
+/* 圓盤卡：保留 */
+.dial-card{display:flex;gap:14px;padding:14px}
+.dial{position:relative;width:138px;height:138px;flex:none}
+.dial svg{width:100%;height:100%}
+.dial-core{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;pointer-events:none}
+.dial-core .shichen{font-family:"Noto Serif SC",serif;font-size:24px;font-weight:700;letter-spacing:.1em}
+.dial-core .pillar{font-size:11px;color:var(--dim)}
+.dial-side{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;padding-top:2px}
+.ds-label{font-size:11px;color:var(--faint);letter-spacing:.08em}
+.ds-head{display:flex;align-items:center;gap:8px}
+.ds-mer{font-family:"Noto Serif SC",serif;font-size:15.5px;font-weight:600}
+.el-tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--dim);background:var(--surface-2);border-radius:var(--r-pill);padding:3px 9px}
+.el-tag .dot{width:7px;height:7px;border-radius:50%}
+.ds-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--dim)}
+.ds-row b{color:var(--ink);font-weight:500;text-align:right}
+/* 方法列 */
+.rail{display:flex;gap:7px;overflow:hidden;margin:2px 0 12px}
+.chip{flex:none;padding:7px 12px;border-radius:var(--r-pill);background:var(--surface);border:1px solid var(--line);font-size:12px;color:var(--dim)}
+.chip.on{background:var(--key-soft);border-color:var(--key);color:var(--key-ink);font-weight:600}
+/* 結果卡 */
+.res{padding:16px 16px 14px}
+.res .r-tag{font-size:11px;color:var(--dim);letter-spacing:.08em}
+.res .r-main{display:flex;align-items:baseline;gap:10px;margin-top:10px;flex-wrap:wrap}
+.res .r-open{font-size:13px;color:var(--dim)}
+.res .r-point{font-family:"Noto Serif SC",serif;font-size:26px;font-weight:700}
+.res .r-mer{font-size:13px;color:var(--dim);margin-top:8px}
+.res .r-sub{font-size:12px;color:var(--faint);line-height:1.7;margin-top:8px}
+.acc{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px dashed var(--line-2);
+  border-radius:var(--r-card);padding:13px 14px;margin-bottom:10px;color:var(--dim);font-size:13px}
+.acc .caret{margin-left:auto;color:var(--faint);font-size:12px}
+.acc .ic{width:18px;height:18px;opacity:.7}
+.cta{margin-top:12px;background:var(--key);color:#fff;border-radius:var(--r-control);padding:14px;text-align:center;font-weight:600;font-size:14px}
+.note{margin-top:12px;font-size:11.5px;color:var(--key-ink);background:var(--key-soft);border-left:3px solid var(--key);
+  border-radius:0 var(--r-control) var(--r-control) 0;padding:10px 12px;line-height:1.6}
+.tabbar{position:absolute;left:0;right:0;bottom:0;display:flex;background:rgba(11,18,15,.92);border-top:1px solid var(--line);padding:10px 8px 14px}
+.tabbar button{flex:1;background:none;border:0;color:var(--faint);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tabbar button.on{color:var(--key)}
+.tabbar .ti{width:20px;height:20px;border-radius:6px;background:var(--surface-2)}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <h1>修訂版 · 圓盤保留在首屏</h1>
+  <div class="sub">流注環＋當值經脈＋四列資訊（時辰時間／時干支／對應經脈／五行屬性）不收起；折疊的是結果卡後方的明細、五輸網格、對照卡與推演依據。</div>
+  <div class="phone">
+    <div class="p-top"><span class="ttl">五腧穴·子午流注</span><span class="tag">即時計算</span></div>
+    <div class="p-body">
+
+      <div class="card date-strip">
+        <div class="d-main">
+          <div class="d-date">公曆 2026-11-17（星期二）</div>
+          <div class="d-lunar">農曆 · 丙午年 己亥月 甲午日</div>
+        </div>
+        <span class="badge">第 47 週</span>
+      </div>
+
+      <!-- 圓盤卡保留 -->
+      <div class="card dial-card">
+        <div class="dial">
+          <svg viewBox="0 0 140 140">
+            <circle cx="70" cy="70" r="62" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8"/>
+            <circle cx="70" cy="70" r="62" fill="none" stroke="#D6543C" stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="40 350" transform="rotate(-90 70 70)"/>
+            <g stroke="rgba(241,238,230,.18)" stroke-width="1.5">
+              <line x1="70" y1="6" x2="70" y2="14"/><line x1="70" y1="126" x2="70" y2="134"/>
+              <line x1="6" y1="70" x2="14" y2="70"/><line x1="126" y1="70" x2="134" y2="70"/>
+            </g>
+          </svg>
+          <div class="dial-core">
+            <span class="shichen">巳時</span>
+            <span class="pillar">時柱 · 己巳</span>
+          </div>
+        </div>
+        <div class="dial-side">
+          <div class="ds-label">當值經脈</div>
+          <div class="ds-head">
+            <span class="ds-mer">足太陰脾經</span>
+            <span class="el-tag"><span class="dot" style="background:var(--earth)"></span>土</span>
+          </div>
+          <div class="ds-row"><span>時辰時間</span><b>09:00–11:00</b></div>
+          <div class="ds-row"><span>時干支</span><b>己巳</b></div>
+          <div class="ds-row"><span>對應經脈</span><b>脾經</b></div>
+          <div class="ds-row"><span>五行屬性</span><b>土</b></div>
+        </div>
+      </div>
+
+      <div class="rail">
+        <span class="chip">五門十變</span><span class="chip">母子補瀉</span>
+        <span class="chip on">納子法</span><span class="chip">納甲法</span><span class="chip">原絡配穴</span>
+      </div>
+
+      <div class="card res">
+        <div class="r-tag">計算結果 · 納子法</div>
+        <div class="r-main"><span class="r-open">開穴：</span><span class="r-point">太白</span><span class="el-tag"><span class="dot" style="background:var(--earth)"></span>土</span></div>
+        <div class="r-mer">足太陰脾經 · 當令</div>
+        <p class="r-sub">此時（巳時 09:00–11:00）氣血流注足太陰脾經；取穴仍需配合虛實與典籍覆核。</p>
+      </div>
+
+      <div class="acc"><span class="ic">☰</span>資訊明細（經脈／五行對照）<span class="caret">展開 ▾</span></div>
+      <div class="acc"><span class="ic">✦</span>循經取穴 · 五輸穴網格<span class="caret">展開 ▾</span></div>
+      <div class="acc"><span class="ic">⇄</span>多法對照（化合／互合／自合）<span class="caret">展開 ▾</span></div>
+      <div class="acc"><span class="ic">▾</span>推演依據 · 規則版本與典籍出處<span class="caret">展開 ▾</span></div>
+
+      <div class="cta">記錄本次結果</div>
+      <div class="note">圓盤與其四列資訊固定留在首屏；只把低頻細節折疊，減少首屏長度又不丟流注資訊。</div>
+    </div>
+    <nav class="tabbar">
+      <button class="on"><span class="ti"></span>首頁</button><button><span class="ti"></span>計算</button>
+      <button><span class="ti"></span>穴庫</button><button><span class="ti"></span>推演</button><button><span class="ti"></span>歷史</button>
+    </nav>
+  </div>
+</div>
+</body>
+</html>
