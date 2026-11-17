@@ -53,11 +53,7 @@ function refreshDial() {
   $('dialPillar').textContent = I18N.t(`時柱 · ${c.timeGZ}`);
   $('dialDay').textContent = I18N.t(`${c.dayGZ}日 · ${c.weekday}`);
   $('metaDate').textContent = I18N.t(`公曆 ${c.date}（${c.weekday}）`);
-  $('metaLunar').textContent = I18N.t(`農曆 ${c.lunar}`);
-  $('metaGZ').textContent = I18N.t(`${c.yearGZ}年 ${c.monthGZ}月 ${c.dayGZ}日`);
-  $('metaJieqi').textContent = I18N.t(`${c.jieqi}後`);
-  $('metaShengxiao').textContent = I18N.t(`生肖 ${c.shengxiao}`);
-  $('metaShichen').textContent = I18N.t(`時辰 ${c.shichen}`);
+  $('metaLunar').textContent = I18N.t(`農曆 ${c.lunar} · ${c.yearGZ}年 ${c.monthGZ}月 ${c.dayGZ}日`);
   $('metaWeek').textContent = I18N.t(`第${isoWeek(new Date(c.date))}週`);
   $('sideTimeGZ').textContent = I18N.t(c.timeGZ);
   $('sideRange').textContent = I18N.t(shichenRange(state.shichen));

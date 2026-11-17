@@ -288,12 +288,12 @@ input[type=date],select{background:var(--surface-2);border:1px solid var(--line)
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* ═══ V2.0 首頁 ═══ */
-.date-card{padding:16px 16px 14px;cursor:pointer}
-.dc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.dc-date{font-family:"Noto Serif SC",serif;font-size:17px;font-weight:700}
-.dc-lunar{font-size:12.5px;color:var(--dim);margin-top:3px}
-.dc-gz{font-size:12.5px;color:var(--dim);margin-top:10px;letter-spacing:.03em}
-.dc-meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12px;color:var(--faint)}
+.date-card{padding:12px 14px;cursor:pointer}
+.dc-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dc-main{min-width:0}
+.dc-date{font-family:"Noto Serif SC",serif;font-size:14px;font-weight:600}
+.dc-lunar{font-size:11px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.date-card .badge{flex:none}
 
 .dial-card{display:flex;flex-direction:row;gap:14px;padding:18px 16px;align-items:center}
 .dial-card .dial{width:150px;height:150px;flex:none;margin:0}
