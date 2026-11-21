@@ -111,9 +111,8 @@ img,svg{display:block;max-width:100%}
 .date-meta{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin-top:10px;font-size:12.5px;color:var(--dim)}
 .date-meta b{color:var(--ink);font-weight:600}
 
-.rail{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:2px 20px 4px;scrollbar-width:none}
-.rail::-webkit-scrollbar{display:none}
-.rail>*{flex:0 0 auto;scroll-snap-align:start}
+.rail{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0}
+.rail>*{flex:0 0 auto}
 .chip{padding:8px 14px;border-radius:var(--r-pill);background:var(--surface);border:1px solid var(--line);
   font-size:13px;color:var(--dim);white-space:nowrap;display:inline-flex;align-items:center;gap:6px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 -1px 0 rgba(0,0,0,.2)}
@@ -415,9 +414,8 @@ body.force-portrait #app{width:390px;height:min(844px,86vh);border-radius:var(--
 body.force-portrait .panel[data-panel="home"]{display:block}
 body.force-portrait .panel[data-panel="home"] .sec-label{display:flex}
 body.force-portrait #merList,body.force-portrait #methodList,body.force-portrait #histList{display:block}
-body.force-portrait #ruleRail{flex-wrap:nowrap;overflow-x:auto;grid-column:auto;grid-row:auto;margin:0 -20px;
-  padding:2px 20px 4px;align-content:initial;align-self:auto;border:0;border-radius:0;
-  background:none;background-image:none}
+body.force-portrait #ruleRail{grid-column:auto;grid-row:auto;margin:0;padding:0;align-content:initial;align-self:auto;
+  border:0;border-radius:0;background:none;background-image:none}
 body.force-portrait .dial-card .dial{width:150px;height:150px}
 body.force-portrait .dial-card .dial-core .shichen{font-size:20px}
 
