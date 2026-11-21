@@ -544,14 +544,14 @@ function renderResult(res, rule, animate = false) {
     sg.appendChild(cell);
   });
 
-  /* 折疊區預設收起；無內容的區塊整列隱藏 */
+  /* 折疊區預設展開；無內容的區塊整列隱藏 */
   $('accInfo').hidden = ig.children.length === 0;
   $('accShu').hidden = sg.children.length === 0;
   $('accCompare').hidden = cc.hidden;
   card.querySelectorAll('.acc').forEach(a => {
-    a.classList.remove('open');
+    a.classList.add('open');
     const caret = a.querySelector('.acc-caret');
-    if (caret) caret.textContent = I18N.t('展開');
+    if (caret) caret.textContent = I18N.t('收起');
   });
 
   $('stepList').innerHTML = res.steps.map((s, i) =>
